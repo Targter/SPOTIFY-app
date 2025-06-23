@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { spotifyApi, convertSpotifyTrack } from "../services/spotifyApi";
-import { shazamCoreApi, useGetTopChartsQuery } from "../services/ShazamCore";
+import React, { useState } from "react";
+import { useGetTopChartsQuery } from "../services/ShazamCore"; // Adjust path as needed
 import TrackCard from "./TrackCard";
 import TrackRow from "./TrackRow";
 import EnhancedSearchBar from "./EnhancedSearchBar";
@@ -10,78 +9,56 @@ import AlbumGrid from "./AlbumGrid";
 import Library from "./Library";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 
+// Helper function to convert Shazam track to standardized format
+// Helper function to convert Apple Music track to standardized format
+const convertAppleMusicTrack = (track) => ({
+  key: track.id,
+  id: track.id,
+  title: track.attributes.name,
+  artist: {
+    name: track.attributes.artistName || "Unknown Artist",
+    id: track.relationships?.artists?.data?.[0]?.id || "",
+    picture_small:
+      track.attributes.artwork?.url.replace(/440x440bb\.jpg$/, "64x64bb.jpg") ||
+      "https://via.placeholder.com/64x64",
+  },
+  album: {
+    id: track.id, // Use song ID as a fallback, as Apple Music doesn't provide a separate album ID here
+    title: track.attributes.albumName,
+    cover_small:
+      track.attributes.artwork?.url.replace(/440x440bb\.jpg$/, "64x64bb.jpg") ||
+      "https://via.placeholder.com/64x64",
+    cover_medium:
+      track.attributes.artwork?.url || "https://via.placeholder.com/300x300",
+  },
+  preview: track.attributes.previews?.[0]?.url || "",
+  duration: Math.floor(track.attributes.durationInMillis / 1000) || 0,
+  explicit: track.attributes.contentRating === "explicit",
+  genres: track.attributes.genreNames || [],
+  releaseDate: track.attributes.releaseDate || "",
+  isrc: track.attributes.isrc || "",
+});
+
 const MainContent = ({ currentView, onViewChange }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [artistResults, setArtistResults] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState(null);
-  //   const [featuredTracks, setFeaturedTracks] = useState([]);
-  const [isLoadingg, setIsLoading] = useState(true);
   const { recentlyPlayed } = useTypedSelector((state) => state.playlist);
 
-  //   useEffect(() => {
-  //     if (currentView === "home") {
-  //       //   loadFeaturedContent();
-  //     }
-  //   }, [currentView]);
-  const { data, error, isLoading } = useGetTopChartsQuery("IN");
+  // Fetch top charts with caching
+  const { data, isLoading, error } = useGetTopChartsQuery({
+    countryCode: "IN",
+    page: 1,
+    pageSize: 20,
+  });
+  if (isLoading) console.log("Loading top charts...", data);
+  // Log errors if any
+  if (error) {
+    console.error("Error loading top charts:", error);
+  }
 
-  console.log("topCharts:", data);
-  //   const formattedTracks = data?.map() || [];
-  //   setFeaturedTracks(data || []);
-  const featuredTracks =
-    data?.map((appleTrack) => ({
-      id: appleTrack.id,
-      title: appleTrack.attributes.name,
-      artist: {
-        name: appleTrack.attributes.artistName,
-        id: appleTrack.relationships.artists.data[0]?.id,
-        picture_small: appleTrack.attributes.artwork.url.replace(
-          /440x440bb\.jpg$/,
-          "64x64bb.jpg"
-        ),
-      },
-      album: {
-        title: appleTrack.attributes.albumName,
-        cover_small: appleTrack.attributes.artwork.url.replace(
-          /440x440bb\.jpg$/,
-          "64x64bb.jpg"
-        ),
-        cover_medium: appleTrack.attributes.artwork.url,
-      },
-      preview: appleTrack.attributes.previews[0]?.url || "",
-      duration: Math.floor(appleTrack.attributes.durationInMillis / 1000),
-      // Additional fields you might need
-      explicit: appleTrack.attributes.contentRating === "explicit",
-      genres: appleTrack.attributes.genreNames,
-      releaseDate: appleTrack.attributes.releaseDate,
-      isrc: appleTrack.attributes.isrc,
-    })) || [];
-  //   const data = topCharts.data || [];
-  //   console.log("Top charts data:", data);
-  //   const loadFeaturedContent = async () => {
-  //     setIsLoading(true);
-  //     console.log("Loading featured content... in MainContent");
-  //     try {
-  //       // Get recommendations for popular tracks
-  //       //   const recommendations = await spotifyApi.getRecommendations(
-  //       //     ["pop", "rock"],
-  //       //     20
-  //       //   );
-  //       //   const formattedTracks = recommendations.map(convertSpotifyTrack);
-  //       //   const topCharts = await shazamCoreApi.endpoints.getTopCharts.initiate(
-  //       //     "IN"
-  //       //   );
-  //       // , {
-  //       //   skip: false,
-  //       //     refetchOnMountOrArgChange: true,
-  //       // }
-  //       //   setFeaturedTracks(formattedTracks);
-  //     } catch (error) {
-  //       console.error("Error loading featured content:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+  // Convert Shazam tracks to standardized format
+  const featuredTracks = data ? data.map(convertAppleMusicTrack) : [];
 
   const renderSearchView = () => {
     if (selectedArtist) {
@@ -107,7 +84,7 @@ const MainContent = ({ currentView, onViewChange }) => {
             <h2 className="text-2xl font-bold text-white mb-4">
               Search Results
             </h2>
-            <div className="space-y-1">
+            <div className="space-y">
               {searchResults.slice(0, 20).map((track, index) => (
                 <TrackRow
                   key={track.id}
@@ -121,7 +98,7 @@ const MainContent = ({ currentView, onViewChange }) => {
         ) : artistResults.length > 0 ? (
           <div>
             <h2 className="text-2xl font-bold text-white mb-4">Artists</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 bg-green-600">
               {artistResults.map((artist) => (
                 <button
                   key={artist.id}
@@ -210,7 +187,7 @@ const MainContent = ({ currentView, onViewChange }) => {
       </section>
 
       {/* Made for You */}
-      {!isLoading && (
+      {!isLoading && featuredTracks.length > 10 && (
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">Made for You</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

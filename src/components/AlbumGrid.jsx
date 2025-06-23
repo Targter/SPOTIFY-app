@@ -1,64 +1,96 @@
-import React, { useState, useEffect } from "react";
-import { deezerApi } from "../services/deezerApi";
+import React, { useState } from "react";
+import {
+  useGetTopChartsQuery,
+  useGetSongsBySearchQuery,
+} from "../services/ShazamCore"; // Adjust path as needed
 import TrackRow from "./TrackRow";
+
+// Helper function to convert Shazam track to standardized format
+const convertShazamTrack = (track) => ({
+  id: track.key || track.track?.key,
+  title: track.title || track.track?.title,
+  artist: {
+    name: track.subtitle || track.track?.subtitle || "Unknown Artist",
+    id: track.artists?.[0]?.adamid || "",
+  },
+  album: {
+    id: track.albumadamid || track.track?.albumadamid || "",
+    title: track.title || track.track?.title,
+    cover_medium:
+      track.images?.coverarthq ||
+      track.track?.images?.coverarthq ||
+      "https://via.placeholder.com/300x300",
+  },
+  preview:
+    track.hub?.actions?.find((action) => action.type === "uri")?.uri || "",
+  duration: track.duration || track.track?.duration || 0,
+});
 
 const AlbumGrid = () => {
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [albumTracks, setAlbumTracks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [skipSearch, setSkipSearch] = useState(true); // Control search query
 
-  useEffect(() => {
-    const loadAlbums = async () => {
-      try {
-        const response = await deezerApi.getChart();
-        // Extract unique albums from chart tracks
-        const uniqueAlbums = response.data.reduce((acc, track) => {
-          const existingAlbum = acc.find(
-            (album) => album.id === track.album.id.toString()
-          );
-          if (!existingAlbum) {
-            acc.push({
-              id: track.album.id.toString(),
-              title: track.album.title,
-              cover_medium: track.album.cover_medium,
-              artist: track.artist,
-            });
-          }
-          return acc;
-        }, []);
-        setAlbums(uniqueAlbums.slice(0, 12));
-      } catch (error) {
-        console.error("Error loading albums:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // Fetch top charts
+  const {
+    data: topCharts,
+    isLoading: isChartsLoading,
+    error: chartsError,
+  } = useGetTopChartsQuery({
+    countryCode: "IN",
+    page: 1,
+    pageSize: 20,
+  });
 
-    loadAlbums();
-  }, []);
+  // Fetch tracks for selected album
+  const { data: searchResults, isLoading: isSearchLoading } =
+    useGetSongsBySearchQuery(
+      selectedAlbum
+        ? `album:"${selectedAlbum.title}" artist:"${selectedAlbum.artist.name}"`
+        : "",
+      { skip: skipSearch }
+    );
 
-  const loadAlbumTracks = async (album) => {
-    setSelectedAlbum(album);
-    setIsLoading(true);
-    try {
-      const response = await deezerApi.searchTracks(
-        `album:"${album.title}" artist:"${album.artist.name}"`
-      );
-      const formattedTracks = response.data.map((track) => ({
-        id: track.id,
-        title: track.title,
-        artist: track.artist,
-        album: track.album,
-        preview: track.preview,
-        duration: track.duration,
-      }));
-      setAlbumTracks(formattedTracks);
-    } catch (error) {
-      console.error("Error loading album tracks:", error);
-    } finally {
-      setIsLoading(false);
+  // Process top charts into unique albums
+  React.useEffect(() => {
+    if (topCharts && !isChartsLoading && !chartsError) {
+      const uniqueAlbums = topCharts.reduce((acc, track) => {
+        const albumId = track.albumadamid?.toString() || track.key;
+        const existingAlbum = acc.find((album) => album.id === albumId);
+        if (!existingAlbum) {
+          acc.push({
+            id: albumId,
+            title: track.title,
+            cover_medium:
+              track.images?.coverarthq || "https://via.placeholder.com/300x300",
+            artist: {
+              name: track.subtitle || "Unknown Artist",
+              id: track.artists?.[0]?.adamid || "",
+            },
+          });
+        }
+        return acc;
+      }, []);
+      setAlbums(uniqueAlbums.slice(0, 12));
     }
+    if (chartsError) {
+      console.error("Error loading albums:", chartsError);
+    }
+  }, [topCharts, isChartsLoading, chartsError]);
+
+  // Process search results into album tracks
+  React.useEffect(() => {
+    if (searchResults && !isSearchLoading && !skipSearch) {
+      const formattedTracks =
+        searchResults.tracks?.hits?.map((hit) => convertShazamTrack(hit)) || [];
+      setAlbumTracks(formattedTracks);
+    }
+  }, [searchResults, isSearchLoading, skipSearch]);
+
+  const loadAlbumTracks = (album) => {
+    setSelectedAlbum(album);
+    setSkipSearch(false); // Trigger search query
   };
 
   if (selectedAlbum) {
@@ -66,7 +98,11 @@ const AlbumGrid = () => {
       <div>
         <div className="flex items-center gap-4 mb-6">
           <button
-            onClick={() => setSelectedAlbum(null)}
+            onClick={() => {
+              setSelectedAlbum(null);
+              setSkipSearch(true); // Stop search query
+              setAlbumTracks([]);
+            }}
             className="text-green-500 hover:text-green-400 transition-colors"
           >
             ← Back to Albums
@@ -90,7 +126,7 @@ const AlbumGrid = () => {
           </div>
         </div>
 
-        {isLoading ? (
+        {isSearchLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
@@ -114,7 +150,7 @@ const AlbumGrid = () => {
     <div>
       <h2 className="text-3xl font-bold text-white mb-6">Popular Albums</h2>
 
-      {isLoading ? (
+      {isChartsLoading ? (
         <div className="flex items-center justify-center py-12">
           <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
         </div>

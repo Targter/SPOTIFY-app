@@ -1,0 +1,83 @@
+{
+  "id": "1795039319",
+  "type": "songs",
+  "href": "/v1/catalog/in/songs/1795039319?l=en-GB",
+  "attributes": {
+    "albumName": "Shake It To The Max (FLY) [Remix] - Single",
+    "hasTimeSyncedLyrics": true,
+    "genreNames": ["Afrobeats", "Music", "African"],
+    "trackNumber": 1,
+    "releaseDate": "2025-02-21",
+    "durationInMillis": 178776,
+    "isVocalAttenuationAllowed": false,
+    "isMasteredForItunes": false,
+    "isrc": "QZS7J2542546",
+    "artwork": {
+      "width": 3000,
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/62/0d/36/620d360f-21f4-8257-8aae-685d70714374/764656160678_cover.jpg/440x440bb.jpg",
+      "height": 3000,
+      "textColor3": "ccd1d1",
+      "textColor2": "f6cd10",
+      "textColor4": "d1b11a",
+      "textColor1": "eff5f5",
+      "bgColor": "3f4042",
+      "hasP3": false
+    },
+    "composerName": "Emwah Warmington, Chinsea Linda Lee, Neil Dyer, Molly Ama Montgomery & ADAM KEVIN ALEXANDER",
+    "audioLocale": "en-US",
+    "url": "https://music.apple.com/in/album/shake-it-to-the-max-fly-remix/1795039318?i=1795039319",
+    "playParams": {
+      "id": "1795039319",
+      "kind": "song"
+    },
+    "discNumber": 1,
+    "hasLyrics": true,
+    "isAppleDigitalMaster": false,
+    "audioTraits": ["lossless", "lossy-stereo"],
+    "name": "Shake It To The Max (FLY) [Remix]",
+    "previews": [
+      {
+        "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/65/ac/1265ac25-2bc1-8796-d779-cd16290b3886/mzaf_13680460125974130670.plus.aac.ep.m4a"
+      }
+    ],
+    "artistName": "MOLIY, Silent Addy, Skillibeng & Shenseea",
+    "contentRating": "explicit"
+  },
+  "relationships": {
+    "artists": {
+      "href": "/v1/catalog/in/songs/1795039319/artists?l=en-GB",
+      "data": [
+        {
+          "id": "1493122482",
+          "type": "artists",
+          "href": "/v1/catalog/in/artists/1493122482?l=en-GB"
+        },
+        {
+          "id": "1477392077",
+          "type": "artists",
+          "href": "/v1/catalog/in/artists/1477392077?l=en-GB"
+        },
+        {
+          "id": "1036011142",
+          "type": "artists",
+          "href": "/v1/catalog/in/artists/1036011142?l=en-GB"
+        },
+        {
+          "id": "1132311326",
+          "type": "artists",
+          "href": "/v1/catalog/in/artists/1132311326?l=en-GB"
+        }
+      ]
+    },
+    "music-videos": {
+      "href": "/v1/catalog/in/songs/1795039319/music-videos?l=en-GB",
+      "data": []
+    }
+  },
+  "meta": {
+    "contentVersion": {
+      "RTCI": 1749625626179,
+      "MZ_INDEXER": 1750418782838
+    }
+  }
+}

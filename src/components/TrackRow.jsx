@@ -18,12 +18,21 @@ const TrackRow = ({ track, index, playlist }) => {
   const { likedSongs } = useTypedSelector((state) => state.playlist);
 
   const isCurrentTrack = currentTrack?.id === track.id;
+  //   if (isCurrentTrack) {
+  //     console.log("Current Track:", currentTrack.id);
+  //     console.log("Track ID:", track.id);
+  //   }
+  //   console.log("ID", currentTrack?.id, "mainId", track?.id);
   const isLiked = likedSongs.some((song) => song.id === track.id);
-
+  //   console.log("TrackRow", { track, index, playlist });
+  //   console.log("TrackImage:", track);
+  //   console.log("TrackImage:", track?.images?.coverarthq);
+  //   console.log("TrackImage:", track?.images?.coverart);
   const handlePlay = () => {
     if (isCurrentTrack) {
       dispatch(setIsPlaying(!isPlaying));
     } else {
+      //   console.log("trackSet:", track);
       dispatch(setCurrentTrack(track));
       dispatch(setQueue(playlist));
       dispatch(setIsPlaying(true));
@@ -68,7 +77,7 @@ const TrackRow = ({ track, index, playlist }) => {
 
       <div className="flex items-center gap-3 min-w-0">
         <img
-          src={track.album.cover_small}
+          src={track.album.cover_medium}
           alt={track.album.title}
           className="w-10 h-10 rounded"
         />

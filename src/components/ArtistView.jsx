@@ -1,42 +1,90 @@
 import React, { useState, useEffect } from "react";
-import { spotifyApi, convertSpotifyTrack } from "../services/spotifyApi";
+import {
+  useGetArtistDetailsQuery,
+  useGetSongsBySearchQuery,
+} from "../services/ShazamCore"; // Adjust path as needed
 import TrackRow from "./TrackRow";
+
+// Helper function to convert Shazam track to standardized format
+const convertShazamTrack = (track) => ({
+  id: track.key || track.id,
+  title: track.title,
+  artist: {
+    name: track.subtitle || "Unknown Artist",
+    id: track.artists?.[0]?.adamid || "",
+  },
+  album: {
+    id: track.albumadamid || "",
+    title: track.title,
+    cover_medium:
+      track.images?.coverarthq || "https://via.placeholder.com/300x300",
+  },
+  preview:
+    track.hub?.actions?.find((action) => action.type === "uri")?.uri || "",
+  duration: track.duration || 0,
+});
 
 const ArtistView = ({ artist, onBack }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [albums, setAlbums] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [skipSearch, setSkipSearch] = useState(true);
+
+  // Fetch artist details (including top songs)
+  const {
+    data: artistData,
+    isLoading: isArtistLoading,
+    error: artistError,
+  } = useGetArtistDetailsQuery(artist.id);
+
+  // Fetch tracks to extract albums
+  const {
+    data: searchResults,
+    isLoading: isSearchLoading,
+    error: searchError,
+  } = useGetSongsBySearchQuery(`artist:"${artist.name}"`, { skip: skipSearch });
 
   useEffect(() => {
-    const loadArtistData = async () => {
-      setIsLoading(true);
-      try {
-        const [tracks, artistAlbums] = await Promise.all([
-          spotifyApi.getArtistTopTracks(artist.id),
-          spotifyApi.getArtistAlbums(artist.id, 10),
-        ]);
-
-        setTopTracks(tracks.map(convertSpotifyTrack));
-        setAlbums(artistAlbums);
-      } catch (error) {
-        console.error("Error loading artist data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadArtistData();
-  }, [artist.id]);
-
-  const formatFollowers = (count) => {
-    if (count >= 1000000) {
-      return `${(count / 1000000).toFixed(1)}M`;
+    setSkipSearch(false); // Trigger album search on mount
+    if (artistData && !isArtistLoading && !artistError) {
+      const tracks = artistData?.data?.[0]?.attributes?.topSongs?.data || [];
+      setTopTracks(tracks.map(convertShazamTrack));
     }
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}K`;
+    if (artistError) {
+      console.error("Error loading artist details:", artistError);
     }
-    return count.toString();
-  };
+  }, [artistData, isArtistLoading, artistError]);
+
+  useEffect(() => {
+    if (searchResults && !isSearchLoading && !searchError) {
+      const uniqueAlbums =
+        searchResults.tracks?.hits?.reduce((acc, hit) => {
+          const track = hit.track;
+          const albumId = track.albumadamid?.toString() || track.key;
+          const existingAlbum = acc.find((album) => album.id === albumId);
+          if (!existingAlbum) {
+            acc.push({
+              id: albumId,
+              name: track.title,
+              images: [
+                {
+                  url:
+                    track.images?.coverarthq ||
+                    "https://via.placeholder.com/300x300",
+                },
+              ],
+              release_date: track.releaseDate || "Unknown",
+            });
+          }
+          return acc;
+        }, []) || [];
+      setAlbums(uniqueAlbums.slice(0, 10)); // Limit to 10 albums
+    }
+    if (searchError) {
+      console.error("Error loading albums:", searchError);
+    }
+    setIsLoading(isArtistLoading || isSearchLoading);
+  }, [searchResults, isSearchLoading, searchError, isArtistLoading]);
 
   return (
     <div>
@@ -52,20 +100,24 @@ const ArtistView = ({ artist, onBack }) => {
       {/* Artist Header */}
       <div className="flex items-start gap-6 mb-8">
         <img
-          src={artist.images[0]?.url || "https://via.placeholder.com/200x200"}
+          src={
+            artist.images?.background || "https://via.placeholder.com/200x200"
+          }
           alt={artist.name}
           className="w-48 h-48 object-cover rounded-full shadow-lg"
         />
         <div className="flex-1">
           <h1 className="text-5xl font-bold text-white mb-4">{artist.name}</h1>
           <div className="flex items-center gap-4 text-gray-400 mb-4">
-            <span>{formatFollowers(artist.followers.total)} followers</span>
+            <span>N/A followers</span>{" "}
+            {/* Shazam doesn't provide follower count */}
             <span>•</span>
-            <span>Popularity: {artist.popularity}/100</span>
+            <span>Popularity: N/A</span>{" "}
+            {/* Shazam doesn't provide popularity */}
           </div>
-          {artist.genres.length > 0 && (
+          {artistData?.data?.[0]?.attributes?.genres?.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {artist.genres.slice(0, 5).map((genre) => (
+              {artistData.data[0].attributes.genres.slice(0, 5).map((genre) => (
                 <span
                   key={genre}
                   className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm"
@@ -121,7 +173,7 @@ const ArtistView = ({ artist, onBack }) => {
                       {album.name}
                     </h3>
                     <p className="text-gray-400 text-sm">
-                      {album.release_date?.split("-")[0]}
+                      {album.release_date?.split("-")[0] || "Unknown"}
                     </p>
                   </div>
                 ))}

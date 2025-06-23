@@ -201,7 +201,7 @@ const Player = () => {
         <div className="flex items-center gap-3 w-1/4 min-w-0">
           <img
             src={
-              currentTrack.album.cover_small || "https://via.placeholder.com/56"
+              currentTrack.album.cover_medium || "https://via.placeholder.com/56"
             }
             alt={currentTrack.album.title}
             className="w-14 h-14 rounded object-cover"

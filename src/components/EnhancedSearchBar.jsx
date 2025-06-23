@@ -1,55 +1,126 @@
 import React, { useState, useEffect } from "react";
-import { Search, User, Music, Album } from "lucide-react";
-import { spotifyApi, convertSpotifyTrack } from "../services/spotifyApi";
+import { Search, User, Music, Album, SendHorizontal } from "lucide-react";
+import { useGetSongsBySearchQuery } from "../services/ShazamCore"; // Adjust path as needed
+
+// Helper function to convert Shazam track to standardized format
+const convertShazamTrack = (track) => ({
+  id: track.key || track.id,
+  title: track.title,
+  artist: {
+    name: track.subtitle || "Unknown Artist",
+    id: track.artists?.[0]?.adamid || "",
+  },
+  album: {
+    id: track.albumadamid || "",
+    title: track.title,
+    cover_medium:
+      track.images?.coverarthq ||
+      track.images?.coverart ||
+      "https://via.placeholder.com/300x300",
+  },
+  preview:
+    track.hub?.actions?.find((action) => action.type === "uri")?.uri || "",
+  duration: 0,
+});
+
+// Helper function to convert Shazam artist to standardized format
+const convertShazamArtist = (artist) => ({
+  id: artist.adamid,
+  name: artist.name || "Unknown Artist",
+  images: [{ url: artist.avatar || "https://via.placeholder.com/200x200" }],
+  genres: artist.genres?.primary ? [artist.genres.primary] : [],
+  followers: { total: 0 }, // Shazam doesn't provide follower count
+  popularity: 0,
+  verified: artist.verified || false,
+});
 
 const EnhancedSearchBar = ({ onResults, onArtistResults }) => {
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState("all");
-  const [isLoading, setIsLoading] = useState(false);
+  const [formattedQuery, setFormattedQuery] = useState("");
+  const [skipSearch, setSkipSearch] = useState(true);
 
-  useEffect(() => {
-    const searchTracks = async () => {
-      if (query.trim().length > 2) {
-        setIsLoading(true);
-        try {
-          let spotifyTracks = [];
-
-          switch (searchType) {
-            case "all":
-              spotifyTracks = await spotifyApi.searchTracks(query);
-              break;
-            case "track":
-              spotifyTracks = await spotifyApi.searchBySongName(query);
-              break;
-            case "artist":
-              spotifyTracks = await spotifyApi.searchByArtist(query);
-              if (onArtistResults) {
-                const artists = await spotifyApi.searchArtists(query);
-                onArtistResults(artists);
-              }
-              break;
-            case "album":
-              // For album search, we'll search tracks and group by album
-              spotifyTracks = await spotifyApi.searchTracks(`album:${query}`);
-              break;
-          }
-
-          const formattedTracks = spotifyTracks.map(convertSpotifyTrack);
-          onResults(formattedTracks);
-        } catch (error) {
-          console.error("Search error:", error);
-          onResults([]);
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
-        onResults([]);
+  // Fetch search results only when skipSearch is false
+  console.log("Formatted query:", formattedQuery, "Skip search:", skipSearch);
+  const { data, isLoading } = useGetSongsBySearchQuery(formattedQuery, {
+    skip: skipSearch,
+  });
+  console.log("Search query:", data, "Loading:", isLoading);
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Search submitted:", query, searchType);
+    if (query.trim().length > 2) {
+      let shazamQuery = query;
+      if (searchType === "track") {
+        shazamQuery = `track:${query}`;
+      } else if (searchType === "artist") {
+        shazamQuery = `artist:${query}`;
+      } else if (searchType === "album") {
+        shazamQuery = `album:${query}`;
       }
-    };
+      setFormattedQuery(shazamQuery);
+      setSkipSearch(false);
+    } else {
+      setSkipSearch(true);
+      console.log("REsult 1....");
+      onResults([]);
+      if (onArtistResults) onArtistResults([]);
+    }
+  };
 
-    const debounceTimer = setTimeout(searchTracks, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [query, searchType, onResults, onArtistResults]);
+  // Process search results
+  useEffect(() => {
+    if (data && !isLoading) {
+      // Handle tracks
+      let tracks =
+        data.tracks?.hits?.map((hit) => convertShazamTrack(hit.track)) || [];
+
+      // For album search, group tracks by album
+      console.log("Processing search Typee:", searchType, tracks);
+      if (searchType === "album") {
+        const uniqueAlbums = tracks.reduce((acc, track) => {
+          const albumId = track.album.id;
+          if (!acc.find((album) => album.id === albumId)) {
+            acc.push({
+              id: albumId,
+              title: track.album.title,
+              cover_medium: track.album.cover_medium,
+              artist: track.artist,
+            });
+          }
+          return acc;
+        }, []);
+        tracks = uniqueAlbums.map((album) => ({
+          id: album.id,
+          title: album.title,
+          artist: album.artist,
+          album: {
+            id: album.id,
+            title: album.title,
+            cover_medium: album.cover_medium,
+          },
+          preview: "", // Albums don't have previews
+          duration: 0,
+        }));
+      }
+
+      console.log("REsult 2....", tracks);
+      onResults(tracks);
+
+      // Handle artists for artist search
+      if (searchType === "artist" && onArtistResults) {
+        const artists =
+          data.artists?.hits?.map((hit) => convertShazamArtist(hit.artist)) ||
+          [];
+        onArtistResults(artists);
+      }
+    } else if (!isLoading && !skipSearch) {
+      console.log("this Called...3");
+      onResults([]);
+      if (onArtistResults) onArtistResults([]);
+    }
+  }, [data, isLoading, searchType, onResults, onArtistResults, skipSearch]);
 
   const searchTypeIcons = {
     all: <Search className="w-4 h-4" />,
@@ -79,7 +150,7 @@ const EnhancedSearchBar = ({ onResults, onArtistResults }) => {
       </div>
 
       {/* Search Input */}
-      <div className="relative max-w-md">
+      <form onSubmit={handleSubmit} className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
@@ -88,14 +159,22 @@ const EnhancedSearchBar = ({ onResults, onArtistResults }) => {
           }...`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-gray-800 text-white pl-10 pr-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-gray-700 transition-colors"
+          className="w-full bg-gray-800 text-white pl-10 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-gray-700 transition-colors"
         />
-        {isLoading && (
+        {isLoading ? (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
             <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
+        ) : (
+          <button
+            type="submit"
+            disabled={query.trim().length <= 2}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-500 disabled:text-gray-600"
+          >
+            <SendHorizontal className="w-5 h-5" />
+          </button>
         )}
-      </div>
+      </form>
     </div>
   );
 };

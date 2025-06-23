@@ -224,7 +224,6 @@
 //
 
 // Authorization token that must have been created previously. See: https://developer.spotify.com/documentation/web-api/concepts/authorization
-
 const token =
   "BQDQya2raSDJWaR3SO6wxuhQoxdF-HB0ql1EzZmEX_q98yJZF-xd-GPe67N77G0m4GYvgf0W4AmINqsc4IDhegIb7EgWiVL8cMeDmGR4Nal28_T2V5k_PjPxW9VmYLyDHbnI8R6UuGQTjDy5GyiNRGbaauo0ITxd7qNYeXfsDwnDdd3Uxm4WsQLsZFQbS5-RaFWQTuOPHmQ6mxBi5SF8uIAukh1Tz0MeG1bv9nZ3CycHBJEWzhBarX0U9SsaAoEiDFfosr8VBbg6IUlOGSeih-__sVjYqRVESf-9bMsYauHSDrE4IgY4OaXu-1405x5t";
 
