@@ -1,12 +1,19 @@
-# React + Vite
+# MusicVerse - A Modern Music Discovery App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![MusicVerse Navbar](F:\CELEBAL-INTERN\WEEK-5\spotify\public\search.png)  
+*Screenshot of the responsive navbar featuring search, playlists, liked songs, and user profile options.*
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+MusicVerse is a feature-rich, fully responsive music discovery application built with React, Redux, and the Shazam Core API. It allows users to search for songs, artists, and albums, create and manage playlists, like songs, and explore music with a sleek, modern UI. The app is optimized for all devices, from mobile phones to desktops, ensuring a seamless user experience.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Search Songs, Artists, and Albums**: 
+  - Use the enhanced search bar to find tracks, artists, or albums by name.
+  - Filter searches by type (all, track, artist, album) with dynamic query formatting for the Shazam Core API.
+  - Real-time results with a debounced search to optimize API calls.
+- **Playlists**:
+  - Create, edit, and delete custom playlists.
+  - Add or remove songs from playlists with a single click.
+  - View all playlists in a dedicated
