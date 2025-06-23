@@ -1,6 +1,6 @@
 # MusicVerse - A Modern Music Discovery App
 
-![MusicVerse Navbar](F:\CELEBAL-INTERN\WEEK-5\spotify\public\search.png)  
+![MusicVerse Navbar](https://github.com/Targter/SpotifyClone1-Celebal/blob/2a18e806aa6e161cad18dafc630afc368cd0b8c9/public/search.png)  
 *Screenshot of the responsive navbar featuring search, playlists, liked songs, and user profile options.*
 
 ## Overview
