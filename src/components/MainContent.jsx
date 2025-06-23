@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { spotifyApi, convertSpotifyTrack } from "../services/spotifyApi";
+import { shazamCoreApi, useGetTopChartsQuery } from "../services/ShazamCore";
 import TrackCard from "./TrackCard";
 import TrackRow from "./TrackRow";
 import EnhancedSearchBar from "./EnhancedSearchBar";
@@ -13,32 +14,74 @@ const MainContent = ({ currentView, onViewChange }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [artistResults, setArtistResults] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState(null);
-  const [featuredTracks, setFeaturedTracks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  //   const [featuredTracks, setFeaturedTracks] = useState([]);
+  const [isLoadingg, setIsLoading] = useState(true);
   const { recentlyPlayed } = useTypedSelector((state) => state.playlist);
 
-  useEffect(() => {
-    if (currentView === "home") {
-      loadFeaturedContent();
-    }
-  }, [currentView]);
+  //   useEffect(() => {
+  //     if (currentView === "home") {
+  //       //   loadFeaturedContent();
+  //     }
+  //   }, [currentView]);
+  const { data, error, isLoading } = useGetTopChartsQuery("IN");
 
-  const loadFeaturedContent = async () => {
-    setIsLoading(true);
-    try {
-      // Get recommendations for popular tracks
-      const recommendations = await spotifyApi.getRecommendations(
-        ["pop", "rock"],
-        20
-      );
-      const formattedTracks = recommendations.map(convertSpotifyTrack);
-      setFeaturedTracks(formattedTracks);
-    } catch (error) {
-      console.error("Error loading featured content:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  console.log("topCharts:", data);
+  //   const formattedTracks = data?.map() || [];
+  //   setFeaturedTracks(data || []);
+  const featuredTracks =
+    data?.map((appleTrack) => ({
+      id: appleTrack.id,
+      title: appleTrack.attributes.name,
+      artist: {
+        name: appleTrack.attributes.artistName,
+        id: appleTrack.relationships.artists.data[0]?.id,
+        picture_small: appleTrack.attributes.artwork.url.replace(
+          /440x440bb\.jpg$/,
+          "64x64bb.jpg"
+        ),
+      },
+      album: {
+        title: appleTrack.attributes.albumName,
+        cover_small: appleTrack.attributes.artwork.url.replace(
+          /440x440bb\.jpg$/,
+          "64x64bb.jpg"
+        ),
+        cover_medium: appleTrack.attributes.artwork.url,
+      },
+      preview: appleTrack.attributes.previews[0]?.url || "",
+      duration: Math.floor(appleTrack.attributes.durationInMillis / 1000),
+      // Additional fields you might need
+      explicit: appleTrack.attributes.contentRating === "explicit",
+      genres: appleTrack.attributes.genreNames,
+      releaseDate: appleTrack.attributes.releaseDate,
+      isrc: appleTrack.attributes.isrc,
+    })) || [];
+  //   const data = topCharts.data || [];
+  //   console.log("Top charts data:", data);
+  //   const loadFeaturedContent = async () => {
+  //     setIsLoading(true);
+  //     console.log("Loading featured content... in MainContent");
+  //     try {
+  //       // Get recommendations for popular tracks
+  //       //   const recommendations = await spotifyApi.getRecommendations(
+  //       //     ["pop", "rock"],
+  //       //     20
+  //       //   );
+  //       //   const formattedTracks = recommendations.map(convertSpotifyTrack);
+  //       //   const topCharts = await shazamCoreApi.endpoints.getTopCharts.initiate(
+  //       //     "IN"
+  //       //   );
+  //       // , {
+  //       //   skip: false,
+  //       //     refetchOnMountOrArgChange: true,
+  //       // }
+  //       //   setFeaturedTracks(formattedTracks);
+  //     } catch (error) {
+  //       console.error("Error loading featured content:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
   const renderSearchView = () => {
     if (selectedArtist) {

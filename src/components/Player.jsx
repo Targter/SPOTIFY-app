@@ -28,7 +28,7 @@ import { useTypedSelector } from "../hooks/useTypedSelector";
 
 const Player = () => {
   const dispatch = useDispatch();
-  const audioRef = useRef < HTMLAudioElement > null;
+  const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(0.7);
 
