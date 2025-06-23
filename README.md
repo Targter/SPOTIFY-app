@@ -16,4 +16,8 @@ MusicVerse is a feature-rich, fully responsive music discovery application built
 - **Playlists**:
   - Create, edit, and delete custom playlists.
   - Add or remove songs from playlists with a single click.
+<<<<<<< HEAD
   - View all playlists in a dedicatedaaaaa
+=======
+  - View all playlists in a dedicated
+>>>>>>> 8dee64f551bbcce74a82e716fde8411d30e0b7fe
