@@ -1,6 +1,6 @@
 # MusicVerse - A Modern Music Discovery App
 
-![MusicVerse Navbar](F:\CELEBAL-INTERN\WEEK-5\spotify\public\search.png)  
+![MusicVerse Navbar](https://github.com/Targter/SpotifyClone1-Celebal/blob/2a18e806aa6e161cad18dafc630afc368cd0b8c9/public/search.png)  
 *Screenshot of the responsive navbar featuring search, playlists, liked songs, and user profile options.*
 
 ## Overview
@@ -16,4 +16,4 @@ MusicVerse is a feature-rich, fully responsive music discovery application built
 - **Playlists**:
   - Create, edit, and delete custom playlists.
   - Add or remove songs from playlists with a single click.
-  - View all playlists in a dedicated
+  - View all playlists in a dedicatedaaaaa

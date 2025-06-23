@@ -98,7 +98,7 @@ const MainContent = ({ currentView, onViewChange }) => {
         ) : artistResults.length > 0 ? (
           <div>
             <h2 className="text-2xl font-bold text-white mb-4">Artists</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 bg-green-600">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 ">
               {artistResults.map((artist) => (
                 <button
                   key={artist.id}
