@@ -10,7 +10,7 @@ const Index = () => {
 
   return (
     <Provider store={store}>
-      <div className="h-screen flex bg-black">
+      <div className="h-screen flex ">
         <Sidebar currentView={currentView} onViewChange={setCurrentView} />
         <MainContent currentView={currentView} onViewChange={setCurrentView} />
         <Player />
