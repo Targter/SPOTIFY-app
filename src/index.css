@@ -73,3 +73,12 @@
   scrollbar-width: thin; /* Thin scrollbar */
   scrollbar-color: rgba(55, 65, 81, 0.8) rgba(0, 0, 0, 1); /* Thumb and track colors */
 }
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

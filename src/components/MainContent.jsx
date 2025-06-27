@@ -7,6 +7,8 @@ import { useTypedSelector } from "../hooks/useTypedSelector";
 import { gsap } from "gsap";
 import { Plus } from "lucide-react";
 import Loading from "./Loading";
+import PlaylistSkeleton from "../skeletons/PlayListSkeleton";
+import FeaturedGridSkeleton from "../skeletons/Cardskeleton";
 
 const convertAppleMusicTrack = (track) => ({
   key: track.id,
@@ -173,7 +175,7 @@ const MainContent = () => {
           </section>
         )}
 
-        {!isLoading && featuredTracks.length > 5 && (
+        {/* {!isLoading && featuredTracks.length > 5 && (
           <section className="mb-12">
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold text-white mb-6">
@@ -189,6 +191,8 @@ const MainContent = () => {
                 </button>
               )}
             </div>
+
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {featuredTracks.slice(0, madeForYouLimit).map((track) => (
                 <TrackCard
@@ -200,8 +204,40 @@ const MainContent = () => {
               ))}
             </div>
           </section>
-        )}
+        )} */}
 
+        <section className="mb-12">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
+              Made for You
+            </h2>
+            {madeForYouLimit < featuredTracks.length && !isLoading && (
+              <button
+                onClick={handleLoadMoreMadeForYou}
+                className="flex items-center gap-2 text-green-500 hover:text-green-400 transition-colors font-medium px-4 py-2 rounded-lg hover:bg-green-500/10"
+              >
+                <Plus className="w-5 h-5" />
+                More
+              </button>
+            )}
+          </div>
+          {isLoading ? (
+            <div className="py-2">
+              <FeaturedGridSkeleton />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+              {featuredTracks.slice(0, madeForYouLimit).map((track) => (
+                <TrackCard
+                  key={track.id}
+                  track={track}
+                  playlist={featuredTracks}
+                  className="track-card bg-gray-900/80 backdrop-blur-md rounded-xl shadow-lg border border-gray-700"
+                />
+              ))}
+            </div>
+          )}
+        </section>
         <section className="mb-12 mt-12">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-white mb-6">
@@ -218,10 +254,8 @@ const MainContent = () => {
             )}
           </div>
           {isLoading ? (
-            <div className="flex items-center h-[50vh] justify-center ">
-              <div className="w-full bg-red-50">
-                <Loading />
-              </div>
+            <div className=" w-full h-full ">
+              <PlaylistSkeleton />
             </div>
           ) : (
             <>
