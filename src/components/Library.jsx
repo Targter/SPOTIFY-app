@@ -710,7 +710,7 @@ const Library = () => {
             className="w-52 h-52 object-cover rounded-2xl shadow-2xl border border-gray-600/30"
           />
           <div className="flex-1 space-y-4">
-            <h1 className="text-5xl font-bold text-white mb-3 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold  mb-3 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
               {playlist.name}
             </h1>
             <p className="text-gray-300 text-lg">
@@ -775,7 +775,7 @@ const Library = () => {
             <span className="text-white text-8xl">♥</span>
           </div>
           <div className="flex-1 space-y-4">
-            <h1 className="text-5xl font-bold text-white mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               Liked Songs
             </h1>
             <p className="text-gray-300 text-lg">Your favorite tracks</p>
@@ -820,7 +820,7 @@ const Library = () => {
   const renderLibraryView = () => {
     return (
       <div className="space-y-8">
-        <h2 className="text-4xl font-bold text-white mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+        <h2 className="text-4xl font-bold  mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
           Your Library
         </h2>
 

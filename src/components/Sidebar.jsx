@@ -522,7 +522,7 @@ import { createPlaylist } from "../store/slices/playlistSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Home, Search, BookAudio, Heart, Plus, Music, X } from "lucide-react";
 import { gsap } from "gsap";
-
+import { Link } from "react-router-dom";
 const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -625,10 +625,12 @@ const Sidebar = () => {
         className="w-64 bg-gradient-to-b from-gray-950 to-black text-white h-auto flex flex-col border-r border-gray-800/50 backdrop-blur-md"
       >
         <div className="p-6">
-          <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
-            <Music className="w-9 h-9 text-green-500" />
-            Musicify
-          </h1>
+          <Link to="/">
+            <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
+              <Music className="w-9 h-9 text-green-500" />
+              Musicify
+            </h1>
+          </Link>
         </div>
         <nav className="px-6 mb-8">
           <ul className="space-y-3">

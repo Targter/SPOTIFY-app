@@ -4,9 +4,9 @@ import Sidebar from "../components/Sidebar";
 
 const Layout = () => {
   return (
-    <div className="h-auto flex">
+    <div className="h-screen flex ">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-scroll thin-dark-scrollbar">
         <Outlet />
       </div>
     </div>

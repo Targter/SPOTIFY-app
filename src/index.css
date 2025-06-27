@@ -32,3 +32,44 @@
   background: #4b5563;
   cursor: not-allowed;
 }
+
+/* 
+ */
+
+/* index.css or your global stylesheet */
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+.thin-dark-scrollbar::-webkit-scrollbar {
+  width: 2px; /* Thin scrollbar width */
+}
+
+/* Scrollbar track (background) */
+.thin-dark-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3); /* Tailwind gray-800 with transparency */
+  border-radius: 12px; /* Rounded track for a polished look */
+  margin: 4px 0; /* Small margin to avoid edge clipping */
+}
+
+/* Scrollbar thumb (the draggable part) */
+.thin-dark-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(
+    55,
+    65,
+    81,
+    0.8
+  ); /* Tailwind gray-700 with slight transparency */
+  border-radius: 12px; /* Rounded thumb */
+  border: 1px solid rgba(0, 0, 0, 1); /* Subtle border for depth */
+}
+
+/* Hover effect on thumb */
+.thin-dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 1); /* Tailwind gray-600 for hover */
+  width: 3px; /* Slightly wider on hover for better grip */
+}
+
+/* Firefox */
+.thin-dark-scrollbar {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: rgba(55, 65, 81, 0.8) rgba(0, 0, 0, 1); /* Thumb and track colors */
+}

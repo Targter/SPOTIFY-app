@@ -40,70 +40,60 @@ const TrackRow = ({
   // GSAP animations
   useEffect(() => {
     // Entrance animation for row
-    // gsap.fromTo(
-    //   rowRef.current,
-    //   {
-    //     // opacity: 0,
-    //     // y: 20,
-    //   },
-    //   {
-    //     // opacity: 1,
-    //     //  y: 0, duration: 0.6,
-    //     ease: "power3.out",
-    //   }
-    // );
+    gsap.fromTo(
+      rowRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.6, ease: "power3.out" }
+    );
 
     // Wave-like oscillation for current playing track
     if (isCurrentTrack && isPlaying) {
-      //   gsap.to(rowRef.current, {
-      //     // y: "+=5",
-      //     duration: 1.5,
-      //     // yoyo: true,
-      //     // repeat: -1,
-      //     // ease: "sine.inOut",
-      //   });
+      gsap.to(rowRef.current, {
+        y: "+=5",
+        duration: 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+      });
     }
 
     // Hover animations
     const handleMouseEnter = () => {
-      //   gsap.to(rowRef.current, {
-      //     scale: 1.0,
-      //     backgroundColor: "rgba(31, 41, 55, 0.9)",
-      //     duration: 0.3,
-      //     // ease: "power2.out",
-      //   });
+      gsap.to(rowRef.current, {
+        backgroundColor: "rgba(31, 41, 55, 0.9)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
       gsap.to(playButtonRef.current, {
         opacity: 1,
         scale: 1.0,
         duration: 0.3,
-        // ease: "elastic.out(1, 0.5)",
       });
       gsap.to(likeButtonRef.current, {
         opacity: 1,
         duration: 0.3,
-        // ease: "power2.out",
+        ease: "power2.out",
       });
     };
 
     const handleMouseLeave = () => {
-      //   gsap.to(rowRef.current, {
-      //     scale: 1,
-      //     // backgroundColor: isCurrentTrack
-      //     //   ? "rgba(31, 41, 55, 0.8)"
-      //     //   : "transparent",
-      //     // duration: 0.3,
-      //     // ease: "power2.out",
-      //   });
+      gsap.to(rowRef.current, {
+        backgroundColor: isCurrentTrack
+          ? "rgba(31, 41, 55, 0.8)"
+          : "transparent",
+        duration: 0.3,
+        ease: "power2.out",
+      });
       gsap.to(playButtonRef.current, {
         opacity: 0,
-        // scale: 1,
-        // duration: 0.3,
-        // ease: "power2.out",
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.out",
       });
       gsap.to(likeButtonRef.current, {
         opacity: isLiked ? 1 : 0,
         duration: 0.3,
-        // ease: "power2.out",
+        ease: "power2.out",
       });
     };
 
@@ -117,7 +107,7 @@ const TrackRow = ({
           opacity: 1,
           y: 0,
           duration: 0.3,
-          //  ease: "back.out(1.4)"
+          ease: "back.out(1.4)",
         }
       );
     }
@@ -132,17 +122,33 @@ const TrackRow = ({
     };
   }, [isCurrentTrack, isPlaying, showPlaylistMenu, isLiked]);
 
-  //
+  // Handle outside click to close playlist menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowPlaylistMenu(false);
+      }
+    };
+
+    if (showPlaylistMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPlaylistMenu]);
 
   const handleRowClick = (e) => {
-    // Don't navigate if clicking on interactive elements
-    // e.stopPropagation();
     e.preventDefault();
     const target = e.target;
     console.log("Event target:", track);
     console.log("Clicked element:", target);
 
-    //
+    if (target.closest("button") || target.closest(".dropdown-menu")) {
+      console.log("Clicked on button or dropdown menu, not navigating.");
+      return;
+    }
 
     console.log("Playing track:", track.title);
 
@@ -155,19 +161,11 @@ const TrackRow = ({
     dispatch(setCurrentTrack(track));
     dispatch(setQueue(playlist));
     dispatch(setCurrentIndex(trackIndex >= 0 ? trackIndex : 0));
-    // dispatch(setIsPlaying(true));
     dispatch(addToRecentlyPlayed(track));
-
-    //
-    if (target.closest("button") || target.closest(".dropdown-menu")) {
-      console.log("Clicked on button or dropdown menu, not navigating.");
-      return;
-    }
     navigate(`/song/${track.id}`);
     console.log("Navigating to song details for:", track.id);
   };
 
-  //
   const handlePlay = (e) => {
     e.stopPropagation();
     console.log("Playing track:", track.title);
@@ -197,7 +195,6 @@ const TrackRow = ({
     } else {
       dispatch(addToLikedSongs(track));
     }
-    // Like button animation
     gsap.fromTo(
       likeButtonRef.current,
       { scale: 1.3 },
@@ -225,6 +222,7 @@ const TrackRow = ({
     if (playlistId) {
       dispatch(removeFromPlaylist({ playlistId, trackId: track.id }));
     }
+    setShowPlaylistMenu(false);
   };
 
   const formatDuration = (seconds) => {
@@ -236,7 +234,6 @@ const TrackRow = ({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Validate track prop
   if (!track || !track.id) {
     return null;
   }
@@ -244,10 +241,9 @@ const TrackRow = ({
   return (
     <div
       ref={rowRef}
-      className={`group grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center p-3 rounded-xl bg-gray-900/80  border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
+      className={`group grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center p-3 rounded-xl bg-gray-900/80 border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
         isCurrentTrack ? "bg-gray-800/80" : ""
       }`}
-      // onClick={handlePlay}
       onClick={handleRowClick}
     >
       <div className="w-8 text-center relative">
@@ -333,70 +329,61 @@ const TrackRow = ({
           <MoreHorizontal className="w-5 h-5" />
         </button>
         {showPlaylistMenu && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/60 z-40"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowPlaylistMenu(false);
-              }}
-            />
-            <div
-              ref={menuRef}
-              className="absolute right-0 top-12 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl py-3 min-w-64 border border-gray-700/50 z-50"
-            >
-              {showDeleteOption && playlistId && (
-                <>
-                  <button
-                    onClick={handleRemoveFromPlaylist}
-                    className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors flex items-center gap-3"
-                  >
-                    <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                      <Trash2 className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">Remove from playlist</span>
-                  </button>
-                  <div className="mx-4 my-2 h-px bg-gray-700/50"></div>
-                </>
-              )}
-              <div className="px-4 py-2 text-xs text-gray-300 font-semibold border-b border-gray-700/50 mb-2">
-                ADD TO PLAYLIST
-              </div>
-              <div className="max-h-48 overflow-y-auto">
-                {playlists.length > 0 ? (
-                  playlists.map((targetPlaylist) => (
-                    <button
-                      key={targetPlaylist.id}
-                      onClick={(e) =>
-                        handleAddToPlaylist(
-                          e,
-                          targetPlaylist.id,
-                          targetPlaylist.name
-                        )
-                      }
-                      className="w-full text-left px-4 py-3 text-sm text-white hover:bg-gray-800/60 transition-colors flex items-center gap-3 group/item"
-                    >
-                      <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center group-hover/item:bg-gray-600 transition-colors">
-                        <Plus className="w-4 h-4 text-gray-300" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium truncate">
-                          {targetPlaylist.name}
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          {targetPlaylist.tracks.length} songs
-                        </div>
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="px-4 py-3 text-sm text-gray-400 text-center">
-                    No playlists available
+          <div
+            ref={menuRef}
+            className="absolute right-0 top-12 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl py-3 min-w-64 border border-gray-700/50 z-50 thin-dark-scrollbar"
+          >
+            {showDeleteOption && playlistId && (
+              <>
+                <button
+                  onClick={handleRemoveFromPlaylist}
+                  className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors flex items-center gap-3"
+                >
+                  <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                    <Trash2 className="w-4 h-4" />
                   </div>
-                )}
-              </div>
+                  <span className="font-medium">Remove from playlist</span>
+                </button>
+                <div className="mx-4 my-2 h-px bg-gray-700/50"></div>
+              </>
+            )}
+            <div className="px-4 py-2 text-xs text-gray-300 font-semibold border-b border-gray-700/50 mb-2">
+              ADD TO PLAYLIST
             </div>
-          </>
+            <div className="max-h-48 overflow-y-auto thin-dark-scrollbar">
+              {playlists.length > 0 ? (
+                playlists.map((targetPlaylist) => (
+                  <button
+                    key={targetPlaylist.id}
+                    onClick={(e) =>
+                      handleAddToPlaylist(
+                        e,
+                        targetPlaylist.id,
+                        targetPlaylist.name
+                      )
+                    }
+                    className="w-full text-left px-4 py-3 text-sm text-white hover:bg-gray-800/60 transition-colors flex items-center gap-3 group/item"
+                  >
+                    <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center group-hover/item:bg-gray-600 transition-colors">
+                      <Plus className="w-4 h-4 text-gray-300" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">
+                        {targetPlaylist.name}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {targetPlaylist.tracks.length} songs
+                      </div>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="px-4 py-3 text-sm text-gray-400 text-center">
+                  No playlists available
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
