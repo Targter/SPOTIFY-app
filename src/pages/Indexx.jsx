@@ -1,22 +1,33 @@
-import React, { useState } from "react";
-import { Provider } from "react-redux";
-import { store } from "../store/store";
-import Sidebar from "../components/Sidebar";
+// import React, { useState } from "react";
+// // import { Provider } from "react-redux";
+// // import { store } from "../store/store";
+// import Sidebar from "../components/Sidebar";
+// import MainContent from "../components/MainContent";
+// import Player from "../components/Player";
+
+// const Index = () => {
+//   const [currentView, setCurrentView] = useState("home");
+
+//   return (
+//     // <Provider store={store}>
+//     <div className="h-screen flex ">
+//       {/* <Sidebar currentView={currentView} onViewChange={setCurrentView} /> */}
+//       {/* <MainContent currentView={currentView} onViewChange={setCurrentView} /> */}
+//       {/* <Player /> */}
+
+//       <MainContent />
+//     </div>
+//     // </Provider>
+//   );
+// };
+
+// export default Index;
+
+import React from "react";
 import MainContent from "../components/MainContent";
-import Player from "../components/Player";
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState("home");
-
-  return (
-    <Provider store={store}>
-      <div className="h-screen flex ">
-        <Sidebar currentView={currentView} onViewChange={setCurrentView} />
-        <MainContent currentView={currentView} onViewChange={setCurrentView} />
-        <Player />
-      </div>
-    </Provider>
-  );
+  return <MainContent />;
 };
 
 export default Index;

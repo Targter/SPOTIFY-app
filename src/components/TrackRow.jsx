@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Play, Pause, Heart, MoreHorizontal, Plus, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   setCurrentTrack,
   setIsPlaying,
@@ -25,6 +26,7 @@ const TrackRow = ({
   showDeleteOption = false,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentTrack, isPlaying } = useTypedSelector((state) => state.player);
   const { likedSongs, playlists } = useTypedSelector((state) => state.playlist);
   const [showPlaylistMenu, setShowPlaylistMenu] = useState(false);
@@ -130,6 +132,42 @@ const TrackRow = ({
     };
   }, [isCurrentTrack, isPlaying, showPlaylistMenu, isLiked]);
 
+  //
+
+  const handleRowClick = (e) => {
+    // Don't navigate if clicking on interactive elements
+    // e.stopPropagation();
+    e.preventDefault();
+    const target = e.target;
+    console.log("Event target:", track);
+    console.log("Clicked element:", target);
+
+    //
+
+    console.log("Playing track:", track.title);
+
+    if (!track.preview) {
+      console.warn("No preview URL for track:", track.title);
+      return;
+    }
+
+    const trackIndex = playlist.findIndex((t) => t.id === track.id);
+    dispatch(setCurrentTrack(track));
+    dispatch(setQueue(playlist));
+    dispatch(setCurrentIndex(trackIndex >= 0 ? trackIndex : 0));
+    // dispatch(setIsPlaying(true));
+    dispatch(addToRecentlyPlayed(track));
+
+    //
+    if (target.closest("button") || target.closest(".dropdown-menu")) {
+      console.log("Clicked on button or dropdown menu, not navigating.");
+      return;
+    }
+    navigate(`/song/${track.id}`);
+    console.log("Navigating to song details for:", track.id);
+  };
+
+  //
   const handlePlay = (e) => {
     e.stopPropagation();
     console.log("Playing track:", track.title);
@@ -209,7 +247,8 @@ const TrackRow = ({
       className={`group grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center p-3 rounded-xl bg-gray-900/80  border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
         isCurrentTrack ? "bg-gray-800/80" : ""
       }`}
-      onClick={handlePlay}
+      // onClick={handlePlay}
+      onClick={handleRowClick}
     >
       <div className="w-8 text-center relative">
         {isCurrentTrack && isPlaying ? (

@@ -130,7 +130,7 @@ const EnhancedSearchBar = ({ onResults, onArtistResults }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       {/* Search Type Selector */}
       <div className="flex gap-2">
         {["all", "track", "artist", "album"].map((type) => (
