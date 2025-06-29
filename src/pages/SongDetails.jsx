@@ -739,7 +739,7 @@ const SongDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden ">
       {/* Background Gradient Overlay */}
       <div
         className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 blur-3xl"

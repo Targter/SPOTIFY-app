@@ -1242,6 +1242,8 @@ const Player = () => {
     repeat,
   } = useTypedSelector((state) => state.player);
 
+  const { jamSession, users } = useTypedSelector((state) => state.jam);
+
   const { likedSongs } = useTypedSelector((state) => state.playlist);
   const isLiked = currentTrack
     ? likedSongs.some((song) => song.id === currentTrack.id)
@@ -1465,7 +1467,7 @@ const Player = () => {
       {!isSongDetailsPage && currentTrack && (
         <div
           ref={playerRef}
-          className="fixed bottom-0 left-0 right-0 bg-gradient-to-b from-gray-950 to-black border-t border-gray-800 px-4 py-4 z-50 thin-dark-scrollbar  "
+          className="fixed bottom-0 left-0 right-0 bg-gradient-to-b from-gray-950 to-black border-t border-gray-800 px-4 py-4 z-50 thin-dark-scrollbar h-[100px] "
         >
           <div className="flex ">
             <div className="flex items-center justify-between max-w-screen-xl mx-auto w-[80%]">

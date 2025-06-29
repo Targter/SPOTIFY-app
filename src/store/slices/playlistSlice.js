@@ -4,7 +4,7 @@ const initialState = {
   playlists: [
     {
       id: "1",
-      name: "My Playlist #1",
+      name: "My Playlist",
       tracks: [],
       cover: "https://picsum.photos/300/300?random=1",
       description: "Your first playlist",

@@ -618,13 +618,23 @@
 
 //
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import TrackRow from "./TrackRow";
+
+import Loading from "./Loading";
+import { Plus } from "lucide-react";
+import TrackCard from "./TrackCard";
 import { gsap } from "gsap";
 
 const Library = () => {
+  const { recentlyPlayed } = useTypedSelector((state) => state.playlist);
+
+  const [recentlyPlayedLimit, setRecentlyPlayedLimit] = useState(3);
+  const handleLoadMoreRecentlyPlayed = () => {
+    setRecentlyPlayedLimit((prev) => prev + 3);
+  };
   const { playlistId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -863,6 +873,35 @@ const Library = () => {
             </button>
           ))}
         </div>
+        {recentlyPlayed.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center w-full  justify-between mb-6">
+              {" "}
+              <h2 className="text-3xl font-bold text-white ">
+                Recently Played
+              </h2>
+              {recentlyPlayedLimit < recentlyPlayed.length && (
+                <button
+                  onClick={handleLoadMoreRecentlyPlayed}
+                  className="flex items-center gap-2 text-green-500 hover:text-green-400 transition-colors font-medium px-4 py-2 rounded-lg hover:bg-green-500/10"
+                >
+                  <Plus className="w-5 h-5" />
+                  More
+                </button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              {recentlyPlayed.slice(0, recentlyPlayedLimit).map((track) => (
+                <TrackCard
+                  key={track.id}
+                  track={track}
+                  playlist={recentlyPlayed}
+                  className="track-card bg-gray-900/80 backdrop-blur-md rounded-xl shadow-lg border border-gray-700"
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     );
   };

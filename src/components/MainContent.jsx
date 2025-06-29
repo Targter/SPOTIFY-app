@@ -147,7 +147,7 @@ const MainContent = () => {
             </p>
           </div>
         </div>
-
+        {/* 
         {recentlyPlayed.length > 0 && (
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-white mb-6">
@@ -173,7 +173,7 @@ const MainContent = () => {
               </button>
             )}
           </section>
-        )}
+        )} */}
 
         {/* {!isLoading && featuredTracks.length > 5 && (
           <section className="mb-12">
