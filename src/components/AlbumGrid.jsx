@@ -255,7 +255,7 @@ const AlbumGrid = () => {
       </div>
 
       {/* Pagination controls would go here */}
-      {console.log(albums.length)}
+      {/* {console.log(albums.length)} */}
       {albums.length > ITEMS_PER_PAGE && <PaginationControls />}
     </div>
   );

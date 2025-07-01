@@ -280,7 +280,7 @@ const GenreGrid = () => {
       <h2 className="text-3xl sm:text-4xl font-bold  mb-6 sm:mb-8 text-center sm:text-left bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
         Explore Music Genres
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 lg:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-2 @7xl:grid-cols-cols-2 xl:grid-cols-3 gap-2 lg:gap-2">
         {genres.map((genre) => (
           <button
             key={genre.code}
@@ -295,7 +295,7 @@ const GenreGrid = () => {
           flex flex-col flex-1 flex-shrink  justify-between
           shadow-lg hover:shadow-xl
           transform hover:-translate-y-1
-          group w-[80px]
+          group lg:w-[100px] xl:w-[120px] md:w-[110px]
         `}
           >
             {/* Glow effect */}

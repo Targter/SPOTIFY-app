@@ -619,7 +619,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
   return (
     <div
       ref={cardRef}
-      className="group bg-gray-900/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:bg-gray-800/90 transition-colors cursor-pointer relative overflow"
+      className="group bg-gray-900/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:bg-gray-800/90 transition-colors cursor-pointer relative overflow-visible z-90"
       onClick={handleCardClick}
     >
       <div className="relative mb-4">
@@ -674,7 +674,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
               {showPlaylistMenu && (
                 <div
                   ref={menuRef}
-                  className="absolute right-0 top-8 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl py-2 z-90 min-w-48 border border-gray-700 thin-dark-scrollbar"
+                  className="absolute right-0 top-8 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl py-2  min-w-48 border border-gray-700 thin-dark-scrollbar z-auto"
                 >
                   <div className="px-4 py-2  text-base font-light">
                     Add to playlist
