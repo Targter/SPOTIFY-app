@@ -7,17 +7,18 @@ const server = http.createServer(app);
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;
-// console.log("port:", PORT);
+const FRONTENDURL = process.env.FRONTENDURL || "http://localhost:5173";
+// console.log("port:", FRONTENDURL);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Your frontend URL
+    origin: FRONTENDURL, // Your frontend URL
     methods: ["GET", "POST"],
   },
 });
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: FRONTENDURL,
     methods: ["GET", "POST"],
   })
 );
