@@ -80,12 +80,8 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex flex-col min-h-screen bg-green-500">
-            <div
-              className={`flex-1 ${
-                isPlayerOpen ? "pb-[100px]" : ""
-              } bg-pink-500`}
-            >
+          <div className="flex flex-col min-h-screen bg-black">
+            <div className={`flex-1 ${isPlayerOpen ? "pb-[100px]" : ""} `}>
               <Routes>
                 <Route element={<Layout isPlayerOpen={isPlayerOpen} />}>
                   <Route path="/" element={<Index />} />

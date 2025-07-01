@@ -448,13 +448,13 @@ const MainContent = () => {
   };
 
   useEffect(() => {
-    // gsap.to(bannerRef.current, {
-    //   backgroundPositionX: "100%",
-    //   duration: 1,
-    //   repeat: -1,
-    //   yoyo: true,
-    //   ease: "sine",
-    // });
+    gsap.to(bannerRef.current, {
+      backgroundPositionX: "100%",
+      duration: 1,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine",
+    });
     // gsap.fromTo(
     //   contentRef.current.children,
     //   { opacity: 0, y: 50 },
@@ -575,18 +575,18 @@ const MainContent = () => {
   };
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-gray-950 to-black text-white p-8 overflow-y-auto min-h-screen">
+    <div className="flex-1  text-white p-8 overflow-y-auto min-h-screen">
       <div ref={contentRef}>
         <div
           ref={bannerRef}
-          className="relative mb-8 p-8 rounded-2xl bg-gradient-to-r from-indigo-900 via-purple-900 to-blue-900 overflow"
+          className="relative mb-8 p-8 rounded-2xl  overflow"
           style={{
             backgroundImage:
               "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
             backgroundSize: "100px 100px",
           }}
         >
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 "></div>
           <div className="relative z-10">
             <h1 className="text-4xl font-extrabold text-white mb-2">
               {getGreeting()}
@@ -599,7 +599,7 @@ const MainContent = () => {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition-colors text-sm font-medium"
+              className="mt-4 px-4 py-2 text-white rounded-md hover:bg-blue-500 transition-colors text-sm font-medium z-99"
             >
               Edit Profile
             </button>
@@ -607,7 +607,7 @@ const MainContent = () => {
         </div>
 
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-90 ">
             <div className="modal bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
               <h3 className="text-xl font-bold text-white mb-4">
                 Edit Profile

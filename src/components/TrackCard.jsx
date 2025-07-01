@@ -619,7 +619,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
   return (
     <div
       ref={cardRef}
-      className="group bg-gray-900/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:bg-gray-800/90 transition-colors cursor-pointer relative overflow-visible z-90"
+      className="group bg-gray-900/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:bg-gray-800/90 transition-colors cursor-pointer relative overflow-visible z-80"
       onClick={handleCardClick}
     >
       <div className="relative mb-4">

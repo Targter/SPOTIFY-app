@@ -18,7 +18,7 @@ const Layout = ({ isPlayerOpen }) => {
     <div
       className={`${isPlayerOpen ? "h-[calc(100vh-100px)]" : "h-screen"} flex ${
         isSmallScreen ? "p-2 gap-2" : "p-3 gap-4"
-      } bg-black`}
+      }`}
     >
       {/* Sidebar - hidden on mobile unless sidebarOpen is true */}
       {(!isMobile || sidebarOpen) && (
@@ -33,7 +33,7 @@ const Layout = ({ isPlayerOpen }) => {
         {isMobile && (
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute left-2 top-2 z-40 p-2 rounded-full bg-gray-800/80 hover:bg-gray-700 transition-colors"
+            className="absolute left-2 top-2 z-40 p-2 rounded-full  hover:bg-gray-700 transition-colors"
           >
             <Menu className="w-5 h-5 text-white" />
           </button>
@@ -46,7 +46,7 @@ const Layout = ({ isPlayerOpen }) => {
             onClick={() => setSidebarOpen(false)}
           />
         )}
-        <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl bg-gray-900/80 backdrop-blur-md border border-gray-700/50">
+        <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl  border border-gray-700/50">
           <Outlet />
         </div>
       </div>
