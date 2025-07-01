@@ -458,6 +458,7 @@ import {
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const TrackCard = ({ track, playlist = [], index = 0 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -590,8 +591,10 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
     e.stopPropagation();
     if (isLiked) {
       dispatch(removeFromLikedSongs(track.id));
+      toast.success(`Remove From Liked Songs"`);
     } else {
       dispatch(addToLikedSongs(track));
+      toast.success(`Added to Liked Songs"`);
     }
     gsap.fromTo(
       e.currentTarget,
@@ -604,6 +607,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
     e.stopPropagation();
     dispatch(addToPlaylist({ playlistId, track }));
     setShowPlaylistMenu(false);
+    toast.success(`Added to Playlist"`);
   };
 
   const formatDuration = (seconds) => {
@@ -672,7 +676,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
                   ref={menuRef}
                   className="absolute right-0 top-8 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl py-2 z-90 min-w-48 border border-gray-700 thin-dark-scrollbar"
                 >
-                  <div className="px-4 py-2 text-xs text-gray-300 font-semibold">
+                  <div className="px-4 py-2  text-base font-light">
                     Add to playlist
                   </div>
                   <div className="max-h-48 overflow-y-auto thin-dark-scrollbar">

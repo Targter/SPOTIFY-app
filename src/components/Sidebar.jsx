@@ -704,7 +704,7 @@ const Sidebar = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -818,7 +818,7 @@ const Sidebar = () => {
             </Link>
           </div>
 
-          <div className="px-3 space-y-5 flex-1 flex flex-col">
+          <div className="md:px-3 px-1 space-y-5 flex-1 flex flex-col">
             {/* Navigation Box */}
             <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2">
               <nav>
@@ -948,7 +948,7 @@ const Sidebar = () => {
             </div>
 
             {/* Playlists Box */}
-            <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2 flex-1 overflow-y-auto thin-dark-scrollbar mt-5">
+            <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2 flex-1 overflow-y-auto thin-dark-scrollbar mt-5 max-h-[250px] truncate ">
               <div className="border-t border-gray-800/50 pt-2">
                 {playlists.length > 0 ? (
                   playlists.map((playlist) => (

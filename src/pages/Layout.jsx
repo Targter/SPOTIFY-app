@@ -1,41 +1,54 @@
-// import React from "react";
-// import { Outlet } from "react-router-dom";
-// import Sidebar from "../components/Sidebar";
-
-// const Layout = () => {
-//   return (
-//     <div className="h-screen flex p-3 gap-4 bg-black">
-//       <Sidebar />
-//       <div className="flex-1 overflow-y-scroll hide-scrollbar rounded-3xl">
-//         <Outlet />
-//       </div>
-//       <div className="log max-w-96 w-auto bg-gray-900 rounded-3xl">
-//         {" "}
-//         div container
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Layout;
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-// import { useIsSmallScreen } from "../hooks/useIsSmallScreen";
+import { Menu, Phone } from "lucide-react";
+import { PhoneIsMobile } from "../hooks/ReallySmallScreen";
 import { useIsSmallScreen } from "../hooks/useSmallScreen";
-
 const Layout = ({ isPlayerOpen }) => {
+  const isMobile = PhoneIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Close sidebar when switching to desktop view
   const isSmallScreen = useIsSmallScreen();
-
+  React.useEffect(() => {
+    if (!isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
   return (
     <div
       className={`${isPlayerOpen ? "h-[calc(100vh-100px)]" : "h-screen"} flex ${
         isSmallScreen ? "p-2 gap-2" : "p-3 gap-4"
       } bg-black`}
     >
-      <Sidebar />
-      <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl bg-gray-900/80 backdrop-blur-md border border-gray-700/50">
-        <Outlet />
+      {/* Sidebar - hidden on mobile unless sidebarOpen is true */}
+      {(!isMobile || sidebarOpen) && (
+        <div className={isMobile ? "absolute z-50 h-full" : ""}>
+          <Sidebar />
+        </div>
+      )}
+
+      {/* Main content area */}
+      <div className="flex-1 overflow-y-scroll hide-scrollbar relative">
+        {/* Mobile menu button */}
+        {isMobile && (
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="absolute left-2 top-2 z-40 p-2 rounded-full bg-gray-800/80 hover:bg-gray-700 transition-colors"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </button>
+        )}
+
+        {/* Overlay when sidebar is open on mobile */}
+        {isMobile && sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl bg-gray-900/80 backdrop-blur-md border border-gray-700/50">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

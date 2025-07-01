@@ -17,6 +17,7 @@ import {
 } from "../store/slices/playlistSlice";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { gsap } from "gsap";
+import { toast } from "sonner";
 
 const TrackRow = ({
   track,
@@ -192,8 +193,10 @@ const TrackRow = ({
     e.stopPropagation();
     if (isLiked) {
       dispatch(removeFromLikedSongs(track.id));
+      toast.warn("Removed From Liked Song");
     } else {
       dispatch(addToLikedSongs(track));
+      toast.success("Add To Liked Song");
     }
     gsap.fromTo(
       likeButtonRef.current,
@@ -215,12 +218,14 @@ const TrackRow = ({
 
     dispatch(addToPlaylist({ playlistId: targetPlaylistId, track }));
     setShowPlaylistMenu(false);
+    toast.success("Added To PlayList");
   };
 
   const handleRemoveFromPlaylist = (e) => {
     e.stopPropagation();
     if (playlistId) {
       dispatch(removeFromPlaylist({ playlistId, trackId: track.id }));
+      toast.warn("Removed From PlayList");
     }
     setShowPlaylistMenu(false);
   };
@@ -241,22 +246,23 @@ const TrackRow = ({
   return (
     <div
       ref={rowRef}
-      className={`group grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 items-center p-3 rounded-xl bg-gray-900/80 border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
+      className={`group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto] gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-900/80 border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
         isCurrentTrack ? "bg-gray-800/80" : ""
       }`}
       onClick={handleRowClick}
     >
-      <div className="w-8 text-center relative">
+      {/* Track number/play button (first column) */}
+      <div className="w-6 sm:w-8 text-center relative">
         {isCurrentTrack && isPlaying ? (
           <div className="flex items-center justify-center">
             <div className="flex space-x-0.5">
-              <div className="w-1 h-5 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"></div>
+              <div className="w-1 h-3 sm:h-5 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"></div>
               <div
-                className="w-1 h-6 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
+                className="w-1 h-4 sm:h-6 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
                 style={{ animationDelay: "0.1s" }}
               ></div>
               <div
-                className="w-1 h-4 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
+                className="w-1 h-2 sm:h-4 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
                 style={{ animationDelay: "0.2s" }}
               ></div>
             </div>
@@ -264,7 +270,7 @@ const TrackRow = ({
         ) : (
           <>
             <span
-              className={`text-sm font-medium ${
+              className={`text-xs sm:text-sm font-medium ${
                 isCurrentTrack ? "text-green-500" : "text-gray-300"
               } group-hover:hidden`}
             >
@@ -273,52 +279,62 @@ const TrackRow = ({
             <button
               ref={playButtonRef}
               onClick={isCurrentTrack && isPlaying ? handlePause : handlePlay}
-              className="w-8 h-8 text-white hidden group-hover:flex items-center justify-center absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full hover:bg-green-500/30 transition-colors opacity-0"
+              className="w-6 h-6 sm:w-8 sm:h-8 text-white hidden group-hover:flex items-center justify-center absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full hover:bg-green-500/30 transition-colors opacity-0"
             >
               {isCurrentTrack && isPlaying ? (
-                <Pause className="w-5 h-5" />
+                <Pause className="w-3 h-3 sm:w-5 sm:h-5" />
               ) : (
-                <Play className="w-5 h-5 ml-0.5" />
+                <Play className="w-3 h-3 sm:w-5 sm:h-5 ml-0.5" />
               )}
             </button>
           </>
         )}
       </div>
-      <div className="flex items-center gap-4 min-w-0">
+
+      {/* Track info (second column) */}
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <img
           src={track.album.cover_medium || "https://via.placeholder.com/40"}
           alt={track.album.title || "No title"}
-          className="w-12 h-12 rounded-md shadow-md"
+          className="w-8 h-8 sm:w-12 sm:h-12 rounded-md shadow-md"
           onError={(e) => {
             e.currentTarget.src = "https://via.placeholder.com/40";
           }}
         />
         <div className="min-w-0">
           <p
-            className={`font-semibold text-base truncate ${
+            className={`font-semibold text-sm sm:text-base truncate ${
               isCurrentTrack ? "text-green-400" : "text-white"
             }`}
           >
             {track.title}
           </p>
-          <p className="text-sm text-gray-300 truncate">
+          <p className="text-xs sm:text-sm text-gray-300 truncate">
             {track.artist.name || "Unknown Artist"}
           </p>
         </div>
       </div>
+
+      {/* Like button (third column - always visible) */}
       <button
         ref={likeButtonRef}
         onClick={handleLike}
-        className={`p-2 rounded-full hover:scale-110 transition-transform ${
+        className={`p-1 sm:p-2 rounded-full hover:scale-110 transition-transform ${
           isLiked ? "text-green-400" : "text-gray-300 hover:text-white"
         } ${isLiked ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
       >
-        <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
+        <Heart
+          className={`w-4 h-4 sm:w-5 sm:h-5 ${isLiked ? "fill-current" : ""}`}
+        />
       </button>
-      <div className="text-sm text-gray-300 text-right">
+
+      {/* Duration (fourth column - hidden on small screens) */}
+      <div className="hidden sm:block text-sm text-gray-300 text-right">
         {formatDuration(track.duration)}
       </div>
-      <div className="relative">
+
+      {/* Menu button (fifth column - hidden on small screens) */}
+      <div className="hidden sm:block relative">
         <button
           onClick={(e) => {
             e.stopPropagation();

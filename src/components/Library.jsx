@@ -782,10 +782,10 @@ const Library = () => {
 
         <div className="flex items-start gap-8 mb-10 p-6 bg-gradient-to-r from-purple-900/40 to-blue-900/40 rounded-2xl border border-purple-500/20 backdrop-blur-sm">
           <div className="w-52 h-52 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl shadow-2xl flex items-center justify-center border border-purple-400/30">
-            <span className="text-white text-8xl">♥</span>
+            <span className="text-white md:text-8xl text-5xl">♥</span>
           </div>
           <div className="flex-1 space-y-4">
-            <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="md:text-5xl text-2xl font-bold mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               Liked Songs
             </h1>
             <p className="text-gray-300 text-lg">Your favorite tracks</p>
@@ -797,8 +797,10 @@ const Library = () => {
 
         {likedSongs.length === 0 ? (
           <div className="text-center py-16 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl border border-purple-500/20">
-            <p className="text-gray-400 text-xl mb-2">No liked songs yet</p>
-            <p className="text-gray-500">
+            <p className="text-gray-400 sm:text-xl text-base mb-2">
+              No liked songs yet
+            </p>
+            <p className="text-gray-500 text-base sm:text-lg">
               Like some songs by clicking the heart icon to see them here
             </p>
           </div>
@@ -834,7 +836,7 @@ const Library = () => {
           Your Library
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           <button
             onClick={() => navigate("/liked")}
             className="group bg-gradient-to-br from-gray-900/80 to-gray-800/60 p-6 rounded-2xl hover:from-gray-800/90 hover:to-gray-700/80 transition-all text-left border border-gray-800/50 hover:border-gray-600/70 shadow-xl hover:shadow-2xl transform hover:scale-105 duration-300"
@@ -890,7 +892,7 @@ const Library = () => {
                 </button>
               )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
               {recentlyPlayed.slice(0, recentlyPlayedLimit).map((track) => (
                 <TrackCard
                   key={track.id}

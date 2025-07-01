@@ -579,7 +579,7 @@ const SongDetails = () => {
   const dropdownRef = useRef(null);
 
   const findSong = () => {
-    console.log("Finding song with ID:", songId);
+    // console.log("Finding song with ID:", songId);
     const queueSong = queue.find((track) => String(track.id) === songId);
     if (queueSong) return queueSong;
 
@@ -604,7 +604,7 @@ const SongDetails = () => {
 
   useEffect(() => {
     if (song) {
-      console.log("Song preview URL:", song.preview);
+      // console.log("Song preview URL:", song.preview);
       if (!song.preview) {
         toast.error("No preview available for this song");
       }
@@ -687,7 +687,7 @@ const SongDetails = () => {
   }
 
   const handlePlay = () => {
-    console.log("Playing song:", song);
+    // console.log("Playing song:", song);
     if (!song.preview) {
       console.warn("No preview URL for song:", song.title);
       toast.error("No preview available for this song");

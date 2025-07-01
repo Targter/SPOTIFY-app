@@ -1,132 +1,200 @@
 import React, { useState } from "react";
-import {
-  useGetTopChartsQuery,
-  useGetSongsBySearchQuery,
-} from "../services/ShazamCore"; // Adjust path as needed
 import TrackRow from "./TrackRow";
+import { data } from "./FakeData";
 
-// Helper function to convert Shazam track to standardized format
-const convertShazamTrack = (track) => ({
-  id: track.key || track.track?.key,
-  title: track.title || track.track?.title,
-  artist: {
-    name: track.subtitle || track.track?.subtitle || "Unknown Artist",
-    id: track.artists?.[0]?.adamid || "",
-  },
-  album: {
-    id: track.albumadamid || track.track?.albumadamid || "",
-    title: track.title || track.track?.title,
-    cover_medium:
-      track.images?.coverarthq ||
-      track.track?.images?.coverarthq ||
-      "https://via.placeholder.com/300x300",
-  },
-  preview:
-    track.hub?.actions?.find((action) => action.type === "uri")?.uri || "",
-  duration: track.duration || track.track?.duration || 0,
-});
+const convertAppleMusicTrack = (track) => {
+  if (!track || !track.attributes) return null;
 
+  return {
+    key: track.id,
+    id: track.id,
+    title: track.attributes.name || "Unknown Track",
+    artist: {
+      name: track.attributes.artistName || "Unknown Artist",
+      id: track.relationships?.artists?.data?.[0]?.id || "",
+      picture_small:
+        track.attributes.artwork?.url?.replace(
+          /440x440bb\.jpg$/,
+          "64x64bb.jpg"
+        ) || "https://via.placeholder.com/64x64",
+    },
+    album: {
+      id: track.id,
+      title: track.attributes.albumName || "Unknown Album",
+      cover_small:
+        track.attributes.artwork?.url?.replace(
+          /440x440bb\.jpg$/,
+          "64x64bb.jpg"
+        ) || "https://via.placeholder.com/64x64",
+      cover_medium:
+        track.attributes.artwork?.url || "https://via.placeholder.com/300x300",
+    },
+    preview: track.attributes.previews?.[0]?.url || "",
+    duration: Math.floor(track.attributes.durationInMillis / 1000) || 0,
+    explicit: track.attributes.contentRating === "explicit",
+    genres: track.attributes.genreNames || [],
+    releaseDate: track.attributes.releaseDate || "",
+    isrc: track.attributes.isrc || "",
+  };
+};
+const ITEMS_PER_PAGE = 6; // Number of albums per page
 const AlbumGrid = () => {
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [albumTracks, setAlbumTracks] = useState([]);
-  const [skipSearch, setSkipSearch] = useState(true); // Control search query
-
-  // Fetch top charts
-  const {
-    data: topCharts,
-    isLoading: isChartsLoading,
-    error: chartsError,
-  } = useGetTopChartsQuery({
-    countryCode: "IN",
-    page: 1,
-    pageSize: 20,
-  });
-
-  // Fetch tracks for selected album
-  const { data: searchResults, isLoading: isSearchLoading } =
-    useGetSongsBySearchQuery(
-      selectedAlbum
-        ? `album:"${selectedAlbum.title}" artist:"${selectedAlbum.artist.name}"`
-        : "",
-      { skip: skipSearch }
-    );
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   // Process top charts into unique albums
   React.useEffect(() => {
-    if (topCharts && !isChartsLoading && !chartsError) {
-      const uniqueAlbums = topCharts.reduce((acc, track) => {
-        const albumId = track.albumadamid?.toString() || track.key;
-        const existingAlbum = acc.find((album) => album.id === albumId);
-        if (!existingAlbum) {
-          acc.push({
-            id: albumId,
-            title: track.title,
-            cover_medium:
-              track.images?.coverarthq || "https://via.placeholder.com/300x300",
-            artist: {
-              name: track.subtitle || "Unknown Artist",
-              id: track.artists?.[0]?.adamid || "",
-            },
-          });
-        }
+    if (data && data.length > 0) {
+      const uniqueAlbums = data.reduce((acc, track) => {
+        // Use album name as ID since we don't have separate album IDs
+        const albumId = track.attributes?.albumName || track.id;
+
+        // Skip if we already have this album
+        if (acc.some((album) => album.id === albumId)) return acc;
+
+        // Get all artists
+        const artists = track.relationships?.artists?.data || [];
+        const artistNames = artists
+          .map((artist) => artist.attributes?.name)
+          .filter(Boolean);
+        const primaryArtist =
+          artistNames[0] || track.attributes?.artistName || "Various Artists";
+
+        acc.push({
+          id: albumId,
+          title: track.attributes?.albumName || "Unknown Album",
+          cover_medium:
+            track.attributes?.artwork?.url?.replace(
+              /440x440bb\.jpg$/,
+              "600x600bb.jpg"
+            ) || "https://via.placeholder.com/600x600",
+          artist: {
+            name: artistNames.join(", ") || primaryArtist,
+            id: artists[0]?.id || "",
+          },
+          releaseDate: track.attributes?.releaseDate,
+          genre: track.attributes?.genreNames?.[0],
+          explicit: track.attributes?.contentRating === "explicit",
+          tracks: [convertAppleMusicTrack(track)], // Include the track itself
+        });
         return acc;
       }, []);
-      setAlbums(uniqueAlbums.slice(0, 12));
-    }
-    if (chartsError) {
-      console.error("Error loading albums:", chartsError);
-    }
-  }, [topCharts, isChartsLoading, chartsError]);
 
-  // Process search results into album tracks
-  React.useEffect(() => {
-    if (searchResults && !isSearchLoading && !skipSearch) {
-      const formattedTracks =
-        searchResults.tracks?.hits?.map((hit) => convertShazamTrack(hit)) || [];
-      setAlbumTracks(formattedTracks);
+      setAlbums(uniqueAlbums);
+      setTotalPages(Math.ceil(uniqueAlbums.length / ITEMS_PER_PAGE));
     }
-  }, [searchResults, isSearchLoading, skipSearch]);
+  }, [data]);
 
   const loadAlbumTracks = (album) => {
     setSelectedAlbum(album);
-    setSkipSearch(false); // Trigger search query
+    setIsLoading(true);
+
+    // Simulate loading tracks (in a real app, you'd fetch these)
+    setTimeout(() => {
+      // Find all tracks that belong to this album
+      const albumTracks = data
+        .filter((track) => track.attributes?.albumName === album.title)
+        .map(convertAppleMusicTrack)
+        .filter(Boolean);
+
+      setAlbumTracks(albumTracks);
+      setIsLoading(false);
+    }, 500);
   };
 
+  //
+  // Get current albums for the page
+  const getCurrentAlbums = () => {
+    const startIndex = (currentPage + 2) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return albums.slice(startIndex, endIndex);
+  };
+
+  // Pagination controls component
+  const PaginationControls = () => (
+    <div className="flex justify-center items-center gap-4 mt-8">
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-gray-800 rounded-md disabled:opacity-50 hover:bg-gray-700 transition-colors"
+      >
+        Previous
+      </button>
+
+      <span className="text-gray-300">
+        Page {currentPage} of {totalPages}
+      </span>
+
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-gray-800 rounded-md disabled:opacity-50 hover:bg-gray-700 transition-colors"
+      >
+        Next
+      </button>
+    </div>
+  );
+
+  //
   if (selectedAlbum) {
     return (
-      <div>
+      <div className="p-4 sm:p-6">
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={() => {
               setSelectedAlbum(null);
-              setSkipSearch(true); // Stop search query
               setAlbumTracks([]);
             }}
-            className="text-green-500 hover:text-green-400 transition-colors"
+            className="flex items-center gap-2 text-green-500 hover:text-green-400 transition-colors"
           >
-            ← Back to Albums
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Back to Albums
           </button>
         </div>
 
-        <div className="flex items-start gap-6 mb-8">
+        <div className="flex flex-col sm:flex-row items-start gap-6 mb-8">
           <img
             src={selectedAlbum.cover_medium}
             alt={selectedAlbum.title}
-            className="w-48 h-48 object-cover rounded-lg shadow-lg"
+            className="w-full sm:w-48 h-48 object-cover rounded-lg shadow-lg"
           />
           <div className="flex-1">
-            <h1 className="text-4xl font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">
               {selectedAlbum.title}
             </h1>
             <p className="text-gray-400 text-lg mb-4">
-              by {selectedAlbum.artist.name}
+              {selectedAlbum.artist.name} •{" "}
+              {selectedAlbum.releaseDate?.split("-")[0] || ""}
             </p>
-            <p className="text-gray-400">{albumTracks.length} songs</p>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400">
+                {albumTracks.length}{" "}
+                {albumTracks.length === 1 ? "song" : "songs"}
+              </span>
+              {selectedAlbum.explicit && (
+                <span className="text-xs bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded">
+                  EXPLICIT
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
-        {isSearchLoading ? (
+        {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
@@ -134,7 +202,7 @@ const AlbumGrid = () => {
           <div className="space-y-1">
             {albumTracks.map((track, index) => (
               <TrackRow
-                key={track.id}
+                key={`${track.id}-${index}`}
                 track={track}
                 index={index}
                 playlist={albumTracks}
@@ -147,36 +215,48 @@ const AlbumGrid = () => {
   }
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold text-white mb-6">Popular Albums</h2>
+    <div className="p-4 sm:p-6">
+      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
+        Popular Albums
+      </h2>
 
-      {isChartsLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {albums.map((album) => (
-            <button
-              key={album.id}
-              onClick={() => loadAlbumTracks(album)}
-              className="group bg-gray-900 p-4 rounded-lg hover:bg-gray-800 transition-colors text-left"
-            >
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {getCurrentAlbums().map((album) => (
+          <button
+            key={album.id}
+            onClick={() => loadAlbumTracks(album)}
+            className="group bg-gray-900/80 hover:bg-gray-800/90 p-3 rounded-xl transition-all text-left"
+          >
+            <div className="relative aspect-square mb-3 overflow-hidden rounded-lg">
               <img
                 src={album.cover_medium}
                 alt={album.title}
-                className="w-full aspect-square object-cover rounded-md mb-3"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
               />
-              <h3 className="text-white font-medium truncate mb-1">
-                {album.title}
-              </h3>
-              <p className="text-gray-400 text-sm truncate">
-                {album.artist.name}
+              {album.explicit && (
+                <div className="absolute top-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white/20">
+                  EXPLICIT
+                </div>
+              )}
+            </div>
+            <h3 className="text-white font-medium truncate mb-1">
+              {album.title}
+            </h3>
+            <p className="text-gray-400 text-sm truncate">
+              {album.artist.name}
+            </p>
+            {album.releaseDate && (
+              <p className="text-gray-500 text-xs mt-1">
+                {album.releaseDate.split("-")[0]}
               </p>
-            </button>
-          ))}
-        </div>
-      )}
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Pagination controls would go here */}
+      {console.log(albums.length)}
+      {albums.length > ITEMS_PER_PAGE && <PaginationControls />}
     </div>
   );
 };
