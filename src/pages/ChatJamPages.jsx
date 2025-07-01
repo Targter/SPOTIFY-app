@@ -657,11 +657,11 @@ const ChatJamPage = () => {
                       } mb-4`}
                     >
                       <div
-                        className={`flex items-start gap-2 max-w-[80%] p-3 rounded-xl ${
+                        className={`flex items-start gap-2 max-w-[80%] p-2 rounded-xl ${
                           msg.senderId === currentUser.userId
                             ? msg.type === "trackMessage"
                               ? "bg-blue-500 text-white"
-                              : "bg-green-500 text-white"
+                              : "bg-gray-500 text-white"
                             : msg.type === "trackMessage"
                             ? "bg-blue-700 text-white"
                             : "bg-gray-700 text-white"
@@ -748,7 +748,7 @@ const ChatJamPage = () => {
                   />
                   <button
                     onClick={handleSendMessage}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    className="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-600 transition-colors"
                   >
                     Send
                   </button>
