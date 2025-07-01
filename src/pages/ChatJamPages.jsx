@@ -583,7 +583,8 @@ const ChatJamPage = () => {
         <div className="lg:w-2/3 flex flex-col gap-4">
           <div className="bg-gray-800 rounded-xl p-4 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Connected Users</h2>
-            {connectedUsers.length === 0 ? (
+            {/* {console.log("connectusers", connectedUsers)} */}
+            {connectedUsers.length <= 1 ? (
               <p className="text-gray-400">No users connected</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
