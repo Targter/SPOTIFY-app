@@ -915,7 +915,7 @@ const SongDetails = () => {
             {Array.from({ length: 40 }).map((_, i) => (
               <div
                 key={i}
-                className={`bg-zinc-900/40 rounded-full transition-all duration-300 ${
+                className={`bg-white rounded-full transition-all duration-300 ${
                   isCurrentSong && isPlaying ? "animate-wave" : ""
                 }`}
                 style={{

@@ -33,7 +33,7 @@ const Layout = ({ isPlayerOpen }) => {
         {isMobile && (
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute left-2 top-2 z-40 p-2 rounded-full  hover:bg-gray-700 transition-colors"
+            className="absolute left-2 top-2 z-2 p-2 rounded-full  hover:bg-gray-700 transition-colors"
           >
             <Menu className="w-5 h-5 text-white" />
           </button>

@@ -72,17 +72,15 @@ const App = () => {
             </div>
             {isPlayerOpen && <Player />}
 
-            {!isPlayerOpen && (
-              <Link to="https://www.abhaybansal.in" target="_blank">
-                <button
-                  className="fixed bottom-4 right-4 flex items-center justify-center gap-2 whitespace-nowrap text-xs font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-10 px-4 rounded-md border cursor-pointer z-80 bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-700 hover:text-white border-gray-700"
-                  aria-label="Built by AbhayBansal"
-                >
-                  <User />
-                  <span>Built by AbhayBansal</span>
-                </button>
-              </Link>
-            )}
+            <Link to="https://www.abhaybansal.in" target="_blank">
+              <button
+                className="fixed bottom-4 right-4 flex items-center justify-center gap-2 whitespace-nowrap text-xs font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-10 px-4 rounded-md border cursor-pointer z-80 bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-700 hover:text-white border-gray-700"
+                aria-label="Built by AbhayBansal"
+              >
+                <User />
+                <span>Built by AbhayBansal</span>
+              </button>
+            </Link>
           </div>
         </BrowserRouter>
         {/* </Provider> */}
