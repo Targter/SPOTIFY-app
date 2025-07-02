@@ -16,7 +16,6 @@ import Layout from "./pages/Layout";
 import { useSelector } from "react-redux";
 import Player from "./components/Player";
 import ChatJamPage from "./pages/ChatJamPages";
-import Appp from "./components/Background";
 import Spline from "@splinetool/react-spline";
 import UserProfilePage from "./pages/UserProfilePage";
 import { User } from "lucide-react";
@@ -42,13 +41,7 @@ const App = () => {
         <BrowserRouter>
           <div className="flex flex-col min-h-screen bg-black">
             <div className="fixed inset-0 z-0 w-full h-full">
-              {/* <Spline
-                // scene="https://prod.spline.design/pcpNWFgGNy485MCH/scene.splinecode"
-
-                className="w-full h-full"
-              /> */}
               <Spline
-                // scene="https://prod.spline.design/WOyLvbWZCji54Rpf/scene.splinecode"
                 scene="https://prod.spline.design/RkfcyXR0qMTiIQYP/scene.splinecode"
                 className="w-full h-full"
               />
