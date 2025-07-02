@@ -220,7 +220,7 @@ const GenreGrid = () => {
     const genre = genres.find((g) => g.code === selectedGenre);
 
     return (
-      <div className="px-4 sm:px-6 w-full ">
+      <div className="px-4 sm:px-6 w-full -1 ">
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={resetGenreSelection}
@@ -276,7 +276,7 @@ const GenreGrid = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="px-4 sm:px-6 lg:px-8  ">
       <h2 className="text-3xl sm:text-4xl font-bold  mb-6 sm:mb-8 text-center sm:text-left text-zinc-300 bg-clip-text ">
         Explore Music Genres
       </h2>
@@ -310,7 +310,7 @@ const GenreGrid = () => {
             </h3>
 
             {/* Decorative elements */}
-            <div className="absolute -bottom-4 -right-4 transform rotate-12 z-0">
+            <div className="absolute -bottom-4 -right-4 transform rotate-12 ">
               <div className="w-20 h-20 sm:w-24 sm:h-24 bg-black/10 rounded-xl backdrop-blur-sm"></div>
             </div>
 

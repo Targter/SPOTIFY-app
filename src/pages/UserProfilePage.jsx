@@ -91,14 +91,14 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen  text-white relative overflow-hidden">
+    <div className="min-h-screen  text-white relative overflow-hidden ">
       {/* Background Gradient Overlay */}
-      <div className="absolute inset-0 " style={{ zIndex: -1 }}>
+      <div className="absolute inset-0 ">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(34,197,94,0.1),_transparent)]" />
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-zinc/90 backdrop-blur-xl border-b border-zinc-700/50">
+      <header className="sticky top-2 bg-zinc/90 backdrop-blur-xl border-b border-zinc-700/50">
         <div className="flex items-center justify-between p-3 sm:p-4 md:p-6 max-w-7xl mx-auto">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
             User Dashboard

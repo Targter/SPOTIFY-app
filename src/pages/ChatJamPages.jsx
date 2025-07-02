@@ -506,7 +506,7 @@ const ChatJamPage = () => {
   const conversationMessages = getConversationMessages();
 
   return (
-    <div className="min-h-screen  text-white font-sans relative">
+    <div className="min-h-screen  text-white font-sans relative z-1">
       <header className=" p-4 shadow-md">
         <h1 className="text-2xl md:text-3xl font-bold text-center">
           ChatJam: Connect & Jam with Friends

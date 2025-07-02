@@ -97,25 +97,6 @@ const MainContent = () => {
     featuredTracksPage * featuredTracksPerPage
   );
 
-  // Debugging logs
-  // console.log("Featured Tracks Length:", featuredTracks.length);
-  // console.log("All Genres:", genres);
-  // console.log("Visible Genres:", visibleGenres);
-  // console.log("Selected Genre:", selectedGenre);
-  // console.log("Filtered Tracks:", filteredTracks);
-  // console.log("Made for You:", {
-  //   page: madeForYouPage,
-  //   totalPages: madeForYouTotalPages,
-  //   tracks: madeForYouTracks,
-  // });
-  // console.log("Featured Tracks:", {
-  //   page: featuredTracksPage,
-  //   totalPages: featuredTracksTotalPages,
-  //   tracks: featuredTracksPaginated,
-  // });
-  // console.log("User Data:", userData);
-
-  // Generate page range with ellipses
   const generatePageRange = (currentPage, totalPages) => {
     const delta = 5;
     const range = [];

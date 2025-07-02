@@ -14,6 +14,15 @@ const Layout = ({ isPlayerOpen }) => {
       setSidebarOpen(false);
     }
   }, [isMobile]);
+
+  //
+
+  // Handle clicks on the sidebar to close it on mobile
+  const handleSidebarClick = () => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
   return (
     <div
       className={`${isPlayerOpen ? "h-[calc(100vh-100px)]" : "h-screen"} flex ${
@@ -22,7 +31,10 @@ const Layout = ({ isPlayerOpen }) => {
     >
       {/* Sidebar - hidden on mobile unless sidebarOpen is true */}
       {(!isMobile || sidebarOpen) && (
-        <div className={isMobile ? "absolute z-50 h-full" : ""}>
+        <div
+          className={isMobile ? "absolute z-50 h-full" : ""}
+          onClick={handleSidebarClick}
+        >
           <Sidebar />
         </div>
       )}
@@ -33,7 +45,8 @@ const Layout = ({ isPlayerOpen }) => {
         {isMobile && (
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute left-2 top-2 z-2 p-2 rounded-full  hover:bg-gray-700 transition-colors"
+            className="absolute left-2 top-2 z-2 p-2 rounded-full hover:bg-gray-700 transition-colors"
+            aria-label="Toggle sidebar"
           >
             <Menu className="w-5 h-5 text-white" />
           </button>
@@ -46,7 +59,8 @@ const Layout = ({ isPlayerOpen }) => {
             onClick={() => setSidebarOpen(false)}
           />
         )}
-        <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl  border border-gray-700/50">
+
+        <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl border border-gray-700/50 pt-5">
           <Outlet />
         </div>
       </div>

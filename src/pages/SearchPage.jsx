@@ -53,8 +53,8 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="flex-1  text-white p-6 md:p-8 overflow-y-auto min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="flex-1  text-white p-6 md:p-8 overflow-y-auto min-h-screen z-9">
+      <div className="max-w-7xl mx-auto ">
         <div ref={contentRef} className="space-y-10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex-1 max-w-3xl">
@@ -148,7 +148,7 @@ const SearchPage = () => {
                           Popular Genres
                         </h3>
                       </div>
-                      <div className="bg-zinc-800/30 backdrop-blur-lg rounded-2xl lg:p-5 p-1 border border-gray-700/50">
+                      <div className="bg-zinc-800/30 z-90 backdrop-blur-lg rounded-2xl lg:p-5 p-1 border border-gray-700/50 ">
                         <GenreGrid />
                       </div>
                     </div>
@@ -158,7 +158,7 @@ const SearchPage = () => {
                           Trending Albums
                         </h3>
                       </div>
-                      <div className="bg-zinc-800/30 backdrop-blur-lg rounded-2xl p-5 border border-gray-700/50">
+                      <div className="bg-zinc-800/30 backdrop-blur-lg rounded-2xl p-5 border border-gray-700/50 ">
                         <AlbumGrid />
                       </div>
                     </div>

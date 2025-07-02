@@ -352,3 +352,86 @@ const TrackRow = ({
 };
 
 export default TrackRow;
+
+//
+
+//     <div
+//       className={`${isPlayerOpen ? "h-[calc(100vh-100px)]" : "h-screen"} flex ${
+//         isSmallScreen ? "p-2 gap-2" : "p-3 gap-4"
+//       }`}
+//     >
+//       {/* Sidebar - hidden on mobile unless sidebarOpen is true */}
+//       {(!isMobile || sidebarOpen) && (
+//         <div className={isMobile ? "absolute z-50 h-full" : ""}>
+//           <Sidebar />
+//         </div>
+//       )}
+
+//       {/* Main content area */}
+//       <div className="flex-1 overflow-y-scroll hide-scrollbar relative">
+//         {/* Mobile menu button */}
+//         {isMobile && (
+//           <button
+//             onClick={() => setSidebarOpen(!sidebarOpen)}
+//             className="absolute left-2 top-2 z-2 p-2 rounded-full  hover:bg-gray-700 transition-colors"
+//           >
+//             <Menu className="w-5 h-5 text-white" />
+//           </button>
+//         )}
+
+//         {/* Overlay when sidebar is open on mobile */}
+//         {isMobile && sidebarOpen && (
+//           <div
+//             className="fixed inset-0 bg-black/50 z-30"
+//             onClick={() => setSidebarOpen(!sidebarOpen)}
+//           />
+//         )}
+//         <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl  border border-gray-700/50">
+//           <Outlet />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Layout;
+//     <div
+//       className={`${isPlayerOpen ? "h-[calc(100vh-100px)]" : "h-screen"} flex ${
+//         isSmallScreen ? "p-2 gap-2" : "p-3 gap-4"
+//       }`}
+//     >
+//       {/* Sidebar - hidden on mobile unless sidebarOpen is true */}
+//       {(!isMobile || sidebarOpen) && (
+//         <div className={isMobile ? "absolute z-50 h-full" : ""}>
+//           <Sidebar />
+//         </div>
+//       )}
+
+//       {/* Main content area */}
+//       <div className="flex-1 overflow-y-scroll hide-scrollbar relative">
+//         {/* Mobile menu button */}
+//         {isMobile && (
+//           <button
+//             onClick={() => setSidebarOpen(!sidebarOpen)}
+//             className="absolute left-2 top-2 z-2 p-2 rounded-full  hover:bg-gray-700 transition-colors"
+//           >
+//             <Menu className="w-5 h-5 text-white" />
+//           </button>
+//         )}
+
+//         {/* Overlay when sidebar is open on mobile */}
+//         {isMobile && sidebarOpen && (
+//           <div
+//             className="fixed inset-0 bg-black/50 z-30"
+//             onClick={() => setSidebarOpen(!sidebarOpen)}
+//           />
+//         )}
+//         <div className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-3xl  border border-gray-700/50">
+//           <Outlet />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Layout;

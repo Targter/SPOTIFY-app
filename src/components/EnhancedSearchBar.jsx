@@ -364,7 +364,7 @@ const EnhancedSearchBar = ({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className} z-1`}>
       {/* Search Type Selector */}
       <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-2 hide-scrollbar">
         {["all", "track", "artist", "album"].map((type) => (
