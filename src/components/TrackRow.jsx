@@ -39,85 +39,85 @@ const TrackRow = ({
   const isLiked = likedSongs.some((song) => song.id === track.id);
 
   // GSAP animations
-  useEffect(() => {
-    // Entrance animation for row
-    gsap.fromTo(
-      rowRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.6, ease: "power3.out" }
-    );
+  // useEffect(() => {
+  //   // Entrance animation for row
+  //   gsap.fromTo(
+  //     rowRef.current
+  //     // { opacity: 0 },
+  //     // { opacity: 1, duration: 0.6, ease: "power3.out" }
+  //   );
 
-    // Wave-like oscillation for current playing track
-    if (isCurrentTrack && isPlaying) {
-      gsap.to(rowRef.current, {
-        y: "+=5",
-        duration: 1.5,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-      });
-    }
+  //   // Wave-like oscillation for current playing track
+  //   if (isCurrentTrack && isPlaying) {
+  //     gsap.to(rowRef.current, {
+  //       // y: "+=5",
+  //       // duration: 1.5,
+  //       yoyo: true,
+  //       repeat: -1,
+  //       ease: "sine.inOut",
+  //     });
+  //   }
 
-    // Hover animations
-    const handleMouseEnter = () => {
-      gsap.to(rowRef.current, {
-        backgroundColor: "rgb(24 24 27,0.4);)",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-      gsap.to(playButtonRef.current, {
-        opacity: 1,
-        // scale: 1.0,
-        duration: 0.3,
-      });
-      gsap.to(likeButtonRef.current, {
-        opacity: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
+  //   // Hover animations
+  //   const handleMouseEnter = () => {
+  //     gsap.to(rowRef.current, {
+  //       backgroundColor: "rgb(24 24 27,0.4);)",
+  //       // duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //     gsap.to(playButtonRef.current, {
+  //       opacity: 1,
+  //       // scale: 1.0,
+  //       duration: 0.3,
+  //     });
+  //     gsap.to(likeButtonRef.current, {
+  //       opacity: 1,
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //   };
 
-    const handleMouseLeave = () => {
-      gsap.to(rowRef.current, {
-        backgroundColor: isCurrentTrack ? "" : "transparent",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-      gsap.to(playButtonRef.current, {
-        opacity: 0,
-        // scale: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-      gsap.to(likeButtonRef.current, {
-        opacity: isLiked ? 1 : 0,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
+  //   const handleMouseLeave = () => {
+  //     gsap.to(rowRef.current, {
+  //       backgroundColor: isCurrentTrack ? "" : "transparent",
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //     gsap.to(playButtonRef.current, {
+  //       opacity: 0,
+  //       // scale: 1,
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //     gsap.to(likeButtonRef.current, {
+  //       opacity: isLiked ? 1 : 0,
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //   };
 
-    // Playlist menu animation
-    if (showPlaylistMenu && menuRef.current) {
-      gsap.fromTo(
-        menuRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.1,
-          ease: "back.out(1.4)",
-        }
-      );
-    }
+  //   // Playlist menu animation
+  //   if (showPlaylistMenu && menuRef.current) {
+  //     gsap.fromTo(
+  //       menuRef.current,
+  //       { opacity: 0 },
+  //       {
+  //         opacity: 1,
+  //         duration: 0.1,
+  //         ease: "back.out(1.4)",
+  //       }
+  //     );
+  //   }
 
-    const row = rowRef.current;
-    row.addEventListener("mouseenter", handleMouseEnter);
-    row.addEventListener("mouseleave", handleMouseLeave);
+  //   const row = rowRef.current;
+  //   row.addEventListener("mouseenter", handleMouseEnter);
+  //   row.addEventListener("mouseleave", handleMouseLeave);
 
-    return () => {
-      row.removeEventListener("mouseenter", handleMouseEnter);
-      row.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [isCurrentTrack, isPlaying, showPlaylistMenu, isLiked]);
+  //   return () => {
+  //     row.removeEventListener("mouseenter", handleMouseEnter);
+  //     row.removeEventListener("mouseleave", handleMouseLeave);
+  //   };
+  // }, [isCurrentTrack, isPlaying, showPlaylistMenu, isLiked]);
 
   // Handle outside click to close playlist menu
   useEffect(() => {
@@ -194,11 +194,11 @@ const TrackRow = ({
       dispatch(addToLikedSongs(track));
       toast.success("Add To Liked Song");
     }
-    gsap.fromTo(
-      likeButtonRef.current
-      // { scale: 1.3 },
-      // { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" }
-    );
+    // gsap.fromTo(
+    //   likeButtonRef.current
+    //   // { scale: 1.3 },
+    //   // { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" }
+    // );
   };
 
   const handleAddToPlaylist = (e, targetPlaylistId, playlistName) => {
@@ -242,13 +242,13 @@ const TrackRow = ({
   return (
     <div
       ref={rowRef}
-      className={`group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto] gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-zinc-700/80 border border-gray-700/50 hover:bg-zinc-800/90 transition-colors cursor-pointer ${
+      className={`group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto] z-50 gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-zinc-700/80 border border-gray-700/50 hover:bg-zinc-800/90 transition-colors cursor-pointer ${
         isCurrentTrack ? "bg-gray-800/80" : ""
       }`}
       onClick={handleRowClick}
     >
       {/* Track number/play button (first column) */}
-      <div className="w-6 sm:w-8 text-center relative">
+      <div className="w-6 sm:w-8 text-center relative z-30">
         {isCurrentTrack && isPlaying ? (
           <div className="flex items-center justify-center">
             <div className="flex space-x-0.5">
@@ -349,7 +349,7 @@ const TrackRow = ({
               <>
                 <button
                   onClick={handleRemoveFromPlaylist}
-                  className="w-full text-left px-4 py-3 text-sm text-zinc-400 hover:bg-zinc-500/10 hover:text-white transition-colors flex items-center gap-3 z-99"
+                  className="w-full text-left px-4 py-3 text-sm text-zinc-400 hover:bg-zinc-500/10 hover:text-white transition-colors flex items-center gap-3 "
                 >
                   <div className="w-8 h-8 bg-zinc-900/20 rounded-lg flex items-center justify-center">
                     <Trash2 className="w-4 h-4" />

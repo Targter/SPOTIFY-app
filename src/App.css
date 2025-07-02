@@ -4,6 +4,11 @@
   padding: 2rem;
   text-align: center;
 }
+:root {
+  --z-index-dropdown: 50;
+  --z-index-modal: 100;
+  --z-index-tooltip: 150;
+}
 
 .logo {
   height: 6em;

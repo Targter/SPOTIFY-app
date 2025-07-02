@@ -281,7 +281,7 @@ const Player = () => {
       {!isSongDetailsPage && currentTrack && (
         <div
           ref={playerRef}
-          className="fixed bottom-0 left-0 right-0 bg-zinc-900/80 backdrop-blur text-gray-300 hover:bg-zinc-900/20  border-t border-gray-800 px-2 sm:px-4 py-2 z-50 h-[80px] sm:h-[100px]"
+          className="fixed bottom-0 left-0 right-0 bg-zinc-900/80 backdrop-blur text-gray-300 hover:bg-zinc-900/20  border-t border-gray-800 px-2 sm:px-4 py-2 z-82 h-[80px] sm:h-[100px]"
         >
           <div className="flex items-center justify-between h-full w-full max-w-screen-xl mx-auto">
             {/* Track Info - Takes less space on mobile */}

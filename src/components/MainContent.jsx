@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 // import { useGetTopChartsQuery } from "../services/ShazamCore";
 import TrackCard from "./TrackCard";
@@ -58,7 +58,7 @@ const MainContent = () => {
     email: localStorage.getItem("email") || "",
     userId: localStorage.getItem("userId") || "",
   });
-  const madeForYouPerPage = 5;
+  const madeForYouPerPage = 10;
   const featuredTracksPerPage = 20;
   const error = false;
   // const isLoading = false;
@@ -179,7 +179,7 @@ const MainContent = () => {
     return newUser;
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.to(bannerRef.current, {
       backgroundPositionX: "100%",
       duration: 1,
@@ -187,46 +187,48 @@ const MainContent = () => {
       yoyo: true,
       ease: "sine",
     });
-    // gsap.fromTo(
-    //   contentRef.current.children,
-    //   { opacity: 0, y: 50 },
-    //   {
-    //     opacity: 1,
-    //     y: 0,
-    //     scale: 1,
-    //     duration: 0,
-    //     ease: "sine",
-    //     stagger: 0.2,
-    //   }
-    // );
-    // const trackCards = document.querySelectorAll(".track-card");
-    // trackCards.forEach((card) => {
-    //   // card.addEventListener("mouseenter", () => {
-    //   //   gsap.to(card, {
-    //   //     // scale: 1.05,
-    //   //     // boxShadow: "0 8px 24px rgba(255, 255, 255, 0.2)",
-    //   //     // duration: 0.3,
-    //   //     // ease: "sine.inOut",
-    //   //   });
-    //   // });
-    //   // card.addEventListener("mouseleave", () => {
-    //   //   gsap.to(card, {
-    //   //     scale: 1,
-    //   //     // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-    //   //     // duration: 0.3,
-    //   //     ease: "sine.inOut",
-    //   //   });
-    //   });
-    // });
-    // Animate modal
-    // if (isModalOpen) {
-    //   gsap.fromTo(
-    //     ".modal",
-    //     { opacity: 0, scale: 0.8 },
-    //     { opacity: 1, scale: 1, duration: 0.3, ease: "sine.inOut" }
-    //   );
-    // }
-  }, [featuredTracks, recentlyPlayed, recentlyPlayedLimit, isModalOpen]);
+  }, []);
+  // useEffect(() => {
+  //   // gsap.fromTo(
+  //   //   contentRef.current.children,
+  //   //   { opacity: 0, y: 50 },
+  //   //   {
+  //   //     opacity: 1,
+  //   //     y: 0,
+  //   //     scale: 1,
+  //   //     duration: 0,
+  //   //     ease: "sine",
+  //   //     stagger: 0.2,
+  //   //   }
+  //   // );
+  //   // const trackCards = document.querySelectorAll(".track-card");
+  //   // trackCards.forEach((card) => {
+  //   //   // card.addEventListener("mouseenter", () => {
+  //   //   //   gsap.to(card, {
+  //   //   //     // scale: 1.05,
+  //   //   //     // boxShadow: "0 8px 24px rgba(255, 255, 255, 0.2)",
+  //   //   //     // duration: 0.3,
+  //   //   //     // ease: "sine.inOut",
+  //   //   //   });
+  //   //   // });
+  //   //   // card.addEventListener("mouseleave", () => {
+  //   //   //   gsap.to(card, {
+  //   //   //     scale: 1,
+  //   //   //     // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+  //   //   //     // duration: 0.3,
+  //   //   //     ease: "sine.inOut",
+  //   //   //   });
+  //   //   });
+  //   // });
+  //   // Animate modal
+  //   // if (isModalOpen) {
+  //   //   gsap.fromTo(
+  //   //     ".modal",
+  //   //     { opacity: 0, scale: 0.8 },
+  //   //     { opacity: 1, scale: 1, duration: 0.3, ease: "sine.inOut" }
+  //   //   );
+  //   // }
+  // }, [featuredTracks, recentlyPlayed, recentlyPlayedLimit, isModalOpen]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -474,13 +476,13 @@ const MainContent = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 overflow">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 overflow-visible ">
                 {madeForYouTracks.length > 0 ? (
                   madeForYouTracks.map((track) => (
                     <div
                       key={track.id}
                       // onClick={() => handleTrackSelect(track)}
-                      className="group bg-gray-900/80 rounded-xl overflow shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                      className="group bg-gray-900/80 rounded-xl overflow-visible shadow-lg hover:shadow-xl transition-shadow cursor-pointer relative  "
                     >
                       <TrackCard
                         track={track}
@@ -503,7 +505,7 @@ const MainContent = () => {
                       handleMadeForYouPageChange(madeForYouPage - 1)
                     }
                     disabled={madeForYouPage === 1}
-                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors"
+                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors "
                   >
                     ← Previous
                   </button>
@@ -527,7 +529,7 @@ const MainContent = () => {
                             <button
                               key={page}
                               onClick={() => handleMadeForYouPageChange(page)}
-                              className={`min-w-[2rem] sm:min-w-[2.5rem] px-2 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                              className={`min-w-[2rem] sm:min-w-[2.5rem] px-2 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors  z-50 ${
                                 madeForYouPage === page
                                   ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
                                   : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
@@ -553,7 +555,7 @@ const MainContent = () => {
                       handleMadeForYouPageChange(madeForYouPage + 1)
                     }
                     disabled={madeForYouPage === madeForYouTotalPages}
-                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors"
+                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors z-20"
                   >
                     Next →
                   </button>
@@ -563,9 +565,9 @@ const MainContent = () => {
           )}
         </section>
 
-        <section className="mb-12 mt-12">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+        <section className="mb-12 mt-12  ">
+          <div className="flex justify-between items-center mb-4 ">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white ">
               Featured Tracks
             </h2>
           </div>
@@ -575,7 +577,7 @@ const MainContent = () => {
                 key={genre}
                 onClick={() => handleGenreChange(genre)}
                 className={`
-        px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap
+        px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap z-40
         flex-1 min-w-[10%] sm:min-w-0 lg:max-w-[10%]
         ${
           selectedGenre === genre
@@ -595,19 +597,19 @@ const MainContent = () => {
             </div>
           ) : (
             <>
-              <div className="space-y-2">
+              <div className="space-y-2 relative z-50">
                 {featuredTracksPaginated.length > 0 ? (
                   featuredTracksPaginated.map((track, index) => (
                     <div
                       key={track.id}
                       onClick={() => handleTrackSelect(track)}
-                      className="cursor-pointer"
+                      className="cursor-pointer  "
                     >
                       <TrackRow
                         track={track}
                         index={index}
                         playlist={filteredTracks}
-                        className="track-card bg-zinc-900/80 backdrop-blur-md rounded-lg shadow-md border border-gray-700"
+                        className="track-card bg-zinc-900/80 backdrop-blur-md rounded-lg shadow-md border border-gray-700 "
                       />
                     </div>
                   ))
@@ -618,23 +620,23 @@ const MainContent = () => {
                 )}
               </div>
               {featuredTracksTotalPages > 1 && (
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6 w-full">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6 w-full z-50">
                   <button
                     onClick={() =>
                       handleFeaturedTracksPageChange(featuredTracksPage - 1)
                     }
                     disabled={featuredTracksPage === 1}
-                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1 z-50"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span>Previous</span>
                   </button>
 
                   {/* Page Numbers - scrollable on mobile */}
-                  <div className="w-full sm:w-auto overflow-x-auto py-1 hide-scrollbar relative">
+                  <div className="w-full sm:w-auto overflow-x-auto py-1 hide-scrollbar relative z-50">
                     {/* Scroll indicators for mobile */}
-                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none sm:hidden"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none sm:hidden"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none sm:hidden z-50"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none sm:hidden z-50"></div>
 
                     <div className="flex gap-1 justify-center min-w-max px-6 sm:px-0">
                       {generatePageRange(
@@ -656,7 +658,7 @@ const MainContent = () => {
                               featuredTracksPage === page
                                 ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
                                 : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
-                            }`}
+                            } z-50`}
                             aria-current={
                               featuredTracksPage === page ? "page" : undefined
                             }
@@ -674,7 +676,7 @@ const MainContent = () => {
                       handleFeaturedTracksPageChange(featuredTracksPage + 1)
                     }
                     disabled={featuredTracksPage === featuredTracksTotalPages}
-                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1 z-50"
                   >
                     <span>Next</span>
                     <ChevronRight className="w-4 h-4" />

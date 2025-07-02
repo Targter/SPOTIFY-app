@@ -32,64 +32,64 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
   const isLiked = likedSongs.some((song) => song.id === track.id);
 
   // GSAP animations
-  useEffect(() => {
-    // Initial animation on mount
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 20, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }
-    );
+  // useEffect(() => {
+  //   // Initial animation on mount
+  //   gsap.fromTo(
+  //     cardRef.current,
+  //     { opacity: 0, y: 20 },
+  //     { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+  //   );
 
-    // Hover animation for card
-    const handleMouseEnter = () => {
-      gsap.to(cardRef.current, {
-        scale: 1.03,
-        boxShadow: "0 8px 24px rgba(255, 255, 255, 0.15)",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-      gsap.to(imageRef.current, {
-        scale: 1.1,
-        duration: 0.5,
-        ease: "sine.out",
-      });
-      gsap.to(playButtonRef.current, {
-        y: -5,
-        opacity: 1,
-        duration: 0.3,
-        ease: "elastic.out(1, 0.5)",
-      });
-    };
+  //   // Hover animation for card
+  //   const handleMouseEnter = () => {
+  //     gsap.to(cardRef.current, {
+  //       scale: 1.03,
+  //       boxShadow: "0 8px 24px rgba(255, 255, 255, 0.15)",
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //     gsap.to(imageRef.current, {
+  //       scale: 1.1,
+  //       duration: 0.5,
+  //       ease: "sine.out",
+  //     });
+  //     gsap.to(playButtonRef.current, {
+  //       y: -5,
+  //       opacity: 1,
+  //       duration: 0.3,
+  //       ease: "elastic.out(1, 0.5)",
+  //     });
+  //   };
 
-    const handleMouseLeave = () => {
-      gsap.to(cardRef.current, {
-        scale: 1,
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-      gsap.to(imageRef.current, {
-        scale: 1,
-        duration: 0.5,
-        ease: "sine.out",
-      });
-      gsap.to(playButtonRef.current, {
-        y: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
+  //   const handleMouseLeave = () => {
+  //     gsap.to(cardRef.current, {
+  //       scale: 1,
+  //       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //     gsap.to(imageRef.current, {
+  //       scale: 1,
+  //       duration: 0.5,
+  //       ease: "sine.out",
+  //     });
+  //     gsap.to(playButtonRef.current, {
+  //       y: 0,
+  //       opacity: 0,
+  //       duration: 0.3,
+  //       ease: "power2.out",
+  //     });
+  //   };
 
-    const card = cardRef.current;
-    card.addEventListener("mouseenter", handleMouseEnter);
-    card.addEventListener("mouseleave", handleMouseLeave);
+  //   const card = cardRef.current;
+  //   card.addEventListener("mouseenter", handleMouseEnter);
+  //   card.addEventListener("mouseleave", handleMouseLeave);
 
-    return () => {
-      card.removeEventListener("mouseenter", handleMouseEnter);
-      card.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
+  //   return () => {
+  //     card.removeEventListener("mouseenter", handleMouseEnter);
+  //     card.removeEventListener("mouseleave", handleMouseLeave);
+  //   };
+  // }, []);
 
   // Handle outside click to close playlist menu
   useEffect(() => {
@@ -154,11 +154,11 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
       dispatch(addToLikedSongs(track));
       toast.success(`Added to Liked Songs"`);
     }
-    gsap.fromTo(
-      e.currentTarget,
-      { scale: 1.1 },
-      { scale: 1, duration: 0.1, ease: "elastic.out(1, 0.5)" }
-    );
+    // gsap.fromTo(
+    //   e.currentTarget,
+    //   { scale: 1.1 },
+    //   { scale: 1, duration: 0.1, ease: "elastic.out(1, 0.5)" }
+    // );
   };
 
   const handleAddToPlaylist = (e, playlistId) => {
@@ -177,7 +177,8 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
   return (
     <div
       ref={cardRef}
-      className="group bg-zinc-900/80 backdrop-blur-md p-5 rounded-xl border border-gray-700 hover:bg-zinc-800/90 transition-colors cursor-pointer relative overflow-visible z-80"
+      className="group bg-zinc-900/80 backdrop-blur-md p-5 rounded-xl border border-gray-700 hover:bg-zinc-800/90 transition-colors cursor-pointer relative  overflow-visible z-30
+       "
       onClick={handleCardClick}
     >
       <div className="relative mb-4">
@@ -224,7 +225,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
                   e.stopPropagation();
                   setShowPlaylistMenu(!showPlaylistMenu);
                 }}
-                className="p-1 rounded-full text-gray-400 hover:text-white transition-colors"
+                className="p-1 rounded-full text-gray-400 hover:text-white transition-colors "
               >
                 <MoreHorizontal className="w-5 h-5" />
               </button>
@@ -232,7 +233,7 @@ const TrackCard = ({ track, playlist = [], index = 0 }) => {
               {showPlaylistMenu && (
                 <div
                   ref={menuRef}
-                  className="absolute right-0 top-8 bg-gradient-to-r from-zinc-700 to-gray-900 backdrop-blur-md rounded-lg shadow-xl py-2  min-w-48 border border-gray-700 thin-dark-scrollbar z-auto"
+                  className="absolute right-0 top-8 bg-gradient-to-r from-zinc-700 to-gray-900 backdrop-blur-md rounded-lg shadow-xl py-2  min-w-48 border border-gray-700 thin-dark-scrollbar z-50 "
                 >
                   <div className="px-4 py-1  text-xs font-ligth">
                     Add to playlist
