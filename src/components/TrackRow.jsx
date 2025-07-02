@@ -61,13 +61,13 @@ const TrackRow = ({
     // Hover animations
     const handleMouseEnter = () => {
       gsap.to(rowRef.current, {
-        backgroundColor: "rgba(31, 41, 55, 0.9)",
+        backgroundColor: "rgb(24 24 27,0.4);)",
         duration: 0.3,
         ease: "power2.out",
       });
       gsap.to(playButtonRef.current, {
         opacity: 1,
-        scale: 1.0,
+        // scale: 1.0,
         duration: 0.3,
       });
       gsap.to(likeButtonRef.current, {
@@ -79,15 +79,13 @@ const TrackRow = ({
 
     const handleMouseLeave = () => {
       gsap.to(rowRef.current, {
-        backgroundColor: isCurrentTrack
-          ? "rgba(31, 41, 55, 0.8)"
-          : "transparent",
+        backgroundColor: isCurrentTrack ? "" : "transparent",
         duration: 0.3,
         ease: "power2.out",
       });
       gsap.to(playButtonRef.current, {
         opacity: 0,
-        scale: 1,
+        // scale: 1,
         duration: 0.3,
         ease: "power2.out",
       });
@@ -102,12 +100,10 @@ const TrackRow = ({
     if (showPlaylistMenu && menuRef.current) {
       gsap.fromTo(
         menuRef.current,
-        { scale: 0.95, opacity: 0, y: 10 },
+        { opacity: 0 },
         {
-          scale: 1,
           opacity: 1,
-          y: 0,
-          duration: 0.3,
+          duration: 0.1,
           ease: "back.out(1.4)",
         }
       );
@@ -143,15 +139,15 @@ const TrackRow = ({
   const handleRowClick = (e) => {
     e.preventDefault();
     const target = e.target;
-    console.log("Event target:", track);
-    console.log("Clicked element:", target);
+    // console.log("Event target:", track);
+    // console.log("Clicked element:", target);
 
     if (target.closest("button") || target.closest(".dropdown-menu")) {
-      console.log("Clicked on button or dropdown menu, not navigating.");
+      // console.log("Clicked on button or dropdown menu, not navigating.");
       return;
     }
 
-    console.log("Playing track:", track.title);
+    // console.log("Playing track:", track.title);
 
     if (!track.preview) {
       console.warn("No preview URL for track:", track.title);
@@ -164,12 +160,12 @@ const TrackRow = ({
     dispatch(setCurrentIndex(trackIndex >= 0 ? trackIndex : 0));
     dispatch(addToRecentlyPlayed(track));
     navigate(`/song/${track.id}`);
-    console.log("Navigating to song details for:", track.id);
+    // console.log("Navigating to song details for:", track.id);
   };
 
   const handlePlay = (e) => {
     e.stopPropagation();
-    console.log("Playing track:", track.title);
+    // console.log("Playing track:", track.title);
 
     if (!track.preview) {
       console.warn("No preview URL for track:", track.title);
@@ -199,15 +195,15 @@ const TrackRow = ({
       toast.success("Add To Liked Song");
     }
     gsap.fromTo(
-      likeButtonRef.current,
-      { scale: 1.3 },
-      { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" }
+      likeButtonRef.current
+      // { scale: 1.3 },
+      // { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" }
     );
   };
 
   const handleAddToPlaylist = (e, targetPlaylistId, playlistName) => {
     e.stopPropagation();
-    console.log("Adding to playlist:", targetPlaylistId, playlistName, track);
+    // console.log("Adding to playlist:", targetPlaylistId, playlistName, track);
 
     const selectedPlaylist = playlists.find((p) => p.id === targetPlaylistId);
     const trackExists = selectedPlaylist?.tracks.some((t) => t.id === track.id);
@@ -246,7 +242,7 @@ const TrackRow = ({
   return (
     <div
       ref={rowRef}
-      className={`group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto] gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-900/80 border border-gray-700/50 hover:bg-gray-800/90 transition-colors cursor-pointer ${
+      className={`group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto] gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-zinc-700/80 border border-gray-700/50 hover:bg-zinc-800/90 transition-colors cursor-pointer ${
         isCurrentTrack ? "bg-gray-800/80" : ""
       }`}
       onClick={handleRowClick}
@@ -256,13 +252,13 @@ const TrackRow = ({
         {isCurrentTrack && isPlaying ? (
           <div className="flex items-center justify-center">
             <div className="flex space-x-0.5">
-              <div className="w-1 h-3 sm:h-5 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"></div>
+              <div className="w-1 h-3 sm:h-5 bg-gradient-to-b from-gray-500 to-zinc-500 animate-pulse rounded-full"></div>
               <div
-                className="w-1 h-4 sm:h-6 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
+                className="w-1 h-4 sm:h-6 bg-gradient-to-b from-gray-500 to-zinc-500 animate-pulse rounded-full"
                 style={{ animationDelay: "0.1s" }}
               ></div>
               <div
-                className="w-1 h-2 sm:h-4 bg-gradient-to-b from-green-500 to-emerald-500 animate-pulse rounded-full"
+                className="w-1 h-2 sm:h-4 bg-gradient-to-b from-gray-500 to-zinc-500 animate-pulse rounded-full"
                 style={{ animationDelay: "0.2s" }}
               ></div>
             </div>
@@ -271,7 +267,7 @@ const TrackRow = ({
           <>
             <span
               className={`text-xs sm:text-sm font-medium ${
-                isCurrentTrack ? "text-green-500" : "text-gray-300"
+                isCurrentTrack ? "text-zinc-500" : "text-gray-300"
               } group-hover:hidden`}
             >
               {index + 1}
@@ -279,7 +275,7 @@ const TrackRow = ({
             <button
               ref={playButtonRef}
               onClick={isCurrentTrack && isPlaying ? handlePause : handlePlay}
-              className="w-6 h-6 sm:w-8 sm:h-8 text-white hidden group-hover:flex items-center justify-center absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full hover:bg-green-500/30 transition-colors opacity-0"
+              className="w-6 h-6 sm:w-8 sm:h-8 text-white hidden group-hover:flex items-center justify-center absolute inset-0 bg-gradient-to-r from-zinc-500/20 to-gray-500/20 rounded-full hover:bg-zinc-500/30 transition-colors opacity-0"
             >
               {isCurrentTrack && isPlaying ? (
                 <Pause className="w-3 h-3 sm:w-5 sm:h-5" />
@@ -304,7 +300,7 @@ const TrackRow = ({
         <div className="min-w-0">
           <p
             className={`font-semibold text-sm sm:text-base truncate ${
-              isCurrentTrack ? "text-green-400" : "text-white"
+              isCurrentTrack ? "text-zinc-400" : "text-white"
             }`}
           >
             {track.title}
@@ -319,8 +315,8 @@ const TrackRow = ({
       <button
         ref={likeButtonRef}
         onClick={handleLike}
-        className={`p-1 sm:p-2 rounded-full hover:scale-110 transition-transform ${
-          isLiked ? "text-green-400" : "text-gray-300 hover:text-white"
+        className={`p-1 sm:p-2 rounded-full  transition-transform ${
+          isLiked ? "text-white" : "text-gray-300 hover:text-white"
         } ${isLiked ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
       >
         <Heart
@@ -347,23 +343,23 @@ const TrackRow = ({
         {showPlaylistMenu && (
           <div
             ref={menuRef}
-            className="absolute right-0 top-12 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl py-3 min-w-64 border border-gray-700/50 z-50 thin-dark-scrollbar"
+            className="absolute right-0 top-12  bg-gradient-to-r from-gray-00 to-zinc-900 backdrop-blur-md rounded-xl shadow-2xl py-2 min-w-64 border border-gray-700/50 z-50 thin-dark-scrollbar"
           >
             {showDeleteOption && playlistId && (
               <>
                 <button
                   onClick={handleRemoveFromPlaylist}
-                  className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors flex items-center gap-3"
+                  className="w-full text-left px-4 py-3 text-sm text-zinc-400 hover:bg-zinc-500/10 hover:text-white transition-colors flex items-center gap-3 z-99"
                 >
-                  <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-zinc-900/20 rounded-lg flex items-center justify-center">
                     <Trash2 className="w-4 h-4" />
                   </div>
                   <span className="font-medium">Remove from playlist</span>
                 </button>
-                <div className="mx-4 my-2 h-px bg-gray-700/50"></div>
+                <div className="mx-4 my-2 h-px bg-zinc-700/50"></div>
               </>
             )}
-            <div className="px-4 py-2 text-xs text-gray-300 font-semibold border-b border-gray-700/50 mb-2">
+            <div className="md:px-6 md:pt-2 text-xs text-gray-300 font-semibold  mb-2">
               ADD TO PLAYLIST
             </div>
             <div className="max-h-48 overflow-y-auto thin-dark-scrollbar">
@@ -378,9 +374,9 @@ const TrackRow = ({
                         targetPlaylist.name
                       )
                     }
-                    className="w-full text-left px-4 py-3 text-sm text-white hover:bg-gray-800/60 transition-colors flex items-center gap-3 group/item"
+                    className="w-full text-left px-4 py-3 text-sm text-white hover:bg-zinc-800/60 transition-colors flex items-center gap-3 group/item"
                   >
-                    <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center group-hover/item:bg-gray-600 transition-colors">
+                    <div className="w-8 h-8 bg-zinc-700 rounded-lg flex items-center justify-center group-hover/item:bg-zinc-600 transition-colors">
                       <Plus className="w-4 h-4 text-gray-300" />
                     </div>
                     <div className="flex-1 min-w-0">

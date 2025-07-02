@@ -53,7 +53,7 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-gray-900 to-gray-950 text-white p-6 md:p-8 overflow-y-auto min-h-screen">
+    <div className="flex-1  text-white p-6 md:p-8 overflow-y-auto min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div ref={contentRef} className="space-y-10">
           <div className="flex items-center justify-between mb-6">
@@ -70,7 +70,7 @@ const SearchPage = () => {
               selectedArtist) && (
               <button
                 onClick={clearResults}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-red-600 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-300 transition-colors"
                 title="Clear all results"
               >
                 <X className="w-5 h-5" />
@@ -87,7 +87,7 @@ const SearchPage = () => {
             <>
               {searchResults.length > 0 ? (
                 <div className="space-y-8">
-                  <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  <h2 className="text-4xl font-bold mb-6 bg-zinc-800 text-white bg-clip-text ">
                     Search Results
                   </h2>
                   <div className="space-y-3">
@@ -104,7 +104,7 @@ const SearchPage = () => {
                 </div>
               ) : artistResults.length > 0 ? (
                 <div className="space-y-8">
-                  <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  <h2 className="text-4xl font-bold mb-6 bg-zinc-800 text-white bg-clip-text">
                     Artists
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
@@ -112,7 +112,7 @@ const SearchPage = () => {
                       <button
                         key={artist.id}
                         onClick={() => setSelectedArtist(artist)}
-                        className="track-card group bg-gray-800/50 hover:bg-gray-700/70 backdrop-blur-md p-4 rounded-xl transition-all duration-300 flex flex-col items-center text-center border border-gray-700/50 hover:border-blue-400/30"
+                        className="track-card group bg-zinc-500/50 hover:bg-gray-700/70 backdrop-blur-md p-4 rounded-xl transition-all duration-300 flex flex-col items-center text-center border border-zinc-700/50 hover:border-zinc-400/30"
                       >
                         <div className="relative w-full aspect-square mb-4 rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-300">
                           <img
@@ -138,27 +138,27 @@ const SearchPage = () => {
                 </div>
               ) : (
                 <div className="space-y-10">
-                  <h2 className="md:text-5xl font-bold mb-8 bg-gradient-to-r text-center from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  <h2 className="md:text-5xl font-bold mb-8bg-zinc-800 text-zinc-500 bg-clip-text ">
                     Discover Music
                   </h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 gap-4">
                     <div className="space-y-6">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-2xl font-bold text-white">
+                        <h3 className="text-2xl font-bold text-zinc-600">
                           Popular Genres
                         </h3>
                       </div>
-                      <div className="bg-gray-800/30 backdrop-blur-lg rounded-2xl lg:p-5 p-1 border border-gray-700/50">
+                      <div className="bg-zinc-800/30 backdrop-blur-lg rounded-2xl lg:p-5 p-1 border border-gray-700/50">
                         <GenreGrid />
                       </div>
                     </div>
                     <div className="space-y-6">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-2xl font-bold text-white">
+                        <h3 className="text-2xl font-bold text-zinc-600">
                           Trending Albums
                         </h3>
                       </div>
-                      <div className="bg-gray-800/30 backdrop-blur-lg rounded-2xl p-5 border border-gray-700/50">
+                      <div className="bg-zinc-800/30 backdrop-blur-lg rounded-2xl p-5 border border-gray-700/50">
                         <AlbumGrid />
                       </div>
                     </div>

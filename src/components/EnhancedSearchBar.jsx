@@ -192,7 +192,7 @@ import ArtistView from "./ArtistView"; // Adjust path as needed
 import GenreGrid from "./GenreGrid"; // Adjust path as needed
 import AlbumGrid from "./AlbumGrid"; // Adjust path as needed
 import { gsap } from "gsap";
-
+import { data } from "./FakeData";
 // Helper function to convert Shazam track to standardized format
 const convertShazamTrack = (track) => {
   const coverArtUrl =
@@ -222,7 +222,7 @@ const convertShazamTrack = (track) => {
 
 // Helper function to convert Shazam artist to standardized format
 const convertShazamArtist = (artist) => {
-  console.log("Converting artist:", artist); // Debug log
+  // console.log("Converting artist:", artist);
   return {
     id: artist.adamid || "",
     name: artist.name || "Unknown Artist",
@@ -234,7 +234,7 @@ const convertShazamArtist = (artist) => {
       },
     ],
     genres: artist.genres?.primary ? [artist.genres.primary] : [],
-    followers: { total: 0 }, // Shazam doesn't provide follower count
+    followers: { total: 0 },
     popularity: 0,
     verified: artist.verified || false,
   };
@@ -253,7 +253,7 @@ const EnhancedSearchBar = ({
   const [searchHistory, setSearchHistory] = useState([]);
 
   // Fetch search results only when skipSearch is false
-  const { data, isLoading } = useGetSongsBySearchQuery(formattedQuery, {
+  const { isLoading } = useGetSongsBySearchQuery(formattedQuery, {
     skip: skipSearch,
   });
 
@@ -373,8 +373,8 @@ const EnhancedSearchBar = ({
             onClick={() => setSearchType(type)}
             className={`flex-shrink-0 flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs sm:text-sm transition-colors ${
               searchType === type
-                ? "bg-green-500 text-black font-medium"
-                : "bg-gray-800 text-white hover:bg-gray-700"
+                ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black font-medium"
+                : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
             }`}
           >
             <span className="hidden sm:inline-block">
@@ -395,26 +395,26 @@ const EnhancedSearchBar = ({
           }...`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-gray-800 text-white pl-10 pr-16 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-gray-700 transition-colors"
+          className="w-full bg-zinc-600/40 pl-10 pr-16 py-3 rounded-lg focus:outline-none focus:ring-2   transition-colors"
         />
         {(query.length > 0 || searchHistory.length > 0) && (
           <button
             type="button"
             onClick={clearSearch}
-            className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500"
+            className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-zinc-500"
           >
             <X className="w-5 h-5" />
           </button>
         )}
         {isLoading ? (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
           <button
             type="submit"
             disabled={query.trim().length <= 2}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-500 disabled:text-gray-600"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white hover:text-zinc-500 disabled:text-gray-600"
           >
             <SendHorizontal className="w-5 h-5" />
           </button>
@@ -424,7 +424,7 @@ const EnhancedSearchBar = ({
       {/* Search History */}
       {searchHistory.length > 0 && (
         <div className="mt-2">
-          <h3 className="text-sm text-gray-400">Recent Searches</h3>
+          <h3 className="text-sm text-white">Recent Searches</h3>
           <div className="flex flex-wrap gap-2 mt-1">
             {searchHistory.map((item, index) => (
               <button
@@ -434,7 +434,7 @@ const EnhancedSearchBar = ({
                   setFormattedQuery(item);
                   setSkipSearch(false);
                 }}
-                className="text-sm bg-gray-800 text-white px-3 py-1 rounded-full hover:bg-gray-700"
+                className="text-sm bg-zinc-500/30 text-white px-3 py-1 rounded-full hover:bg-gray-700"
               >
                 {item.replace(/^(track|artist|album):/, "")}
               </button>

@@ -682,6 +682,8 @@ import {
   Music,
   X,
   MessageSquare,
+  ListMusic,
+  CircleUser,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { Link } from "react-router-dom";
@@ -785,17 +787,17 @@ const Sidebar = () => {
   };
 
   const getNavClass = (path) =>
-    `nav-item flex items-center gap-3 transition-colors w-full text-left py-2 px-2 rounded-lg ${
+    `nav-item flex items-center gap-3 w-full text-left py-2 px-2 rounded-lg ${
       location.pathname === path
-        ? "text-white bg-gray-800/50"
-        : "text-gray-300 hover:bg-gray-800/30"
+        ? "text-white bg-zinc-800/50"
+        : "text-zinc-300 hover:bg-zinc-800/30"
     }`;
 
   const getPlaylistNavClass = (playlistId) =>
-    `nav-item transition-colors block truncate w-full text-left py-1 px-2 rounded-lg ${
+    `nav-item flex items-center gap-3  block truncate w-full text-left py-1 px-2 rounded-lg ${
       location.pathname === `/playlist/${playlistId}`
-        ? "text-white bg-gray-800/50"
-        : "text-gray-300 hover:bg-gray-800/30"
+        ? "text-white bg-zinc-800/50"
+        : "text-zinc-300 hover:bg-zinc-800/30"
     }`;
 
   return (
@@ -810,8 +812,8 @@ const Sidebar = () => {
           } bg-gradient-to-b from-gray-950 to-black text-white h-full flex flex-col border-r border-gray-800/50 backdrop-blur-md transition-all duration-300`}
         >
           <div className="p-3 flex items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <Music className="w-7 h-7 text-green-500" />
+            <Link to="/" className="flex items-center gap-3">
+              <Music className="w-7 h-7 text-zinc-500/40" />
               {!isMobile && (
                 <h1 className="text-xl font-extrabold text-white">Musicify</h1>
               )}
@@ -820,7 +822,7 @@ const Sidebar = () => {
 
           <div className="md:px-3 px-1 space-y-5 flex-1 flex flex-col">
             {/* Navigation Box */}
-            <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2">
+            <div className="bg-black/60 backdrop-blur-md border border-gray-700/50 rounded-lg p-2">
               <nav>
                 <ul className="space-y-1">
                   <li>
@@ -831,9 +833,9 @@ const Sidebar = () => {
                       aria-label="Home"
                     >
                       <Home
-                        className={`nav-icon w-5 h-5 ${
+                        className={`nav-icon w-5 h-5 hover:text-white ${
                           location.pathname === "/"
-                            ? "text-green-500"
+                            ? "text-white"
                             : "text-gray-300"
                         }`}
                       />
@@ -852,7 +854,7 @@ const Sidebar = () => {
                       <Search
                         className={`nav-icon w-5 h-5 ${
                           location.pathname === "/search"
-                            ? "text-green-500"
+                            ? "text-white"
                             : "text-gray-300"
                         }`}
                       />
@@ -871,7 +873,7 @@ const Sidebar = () => {
                       <BookAudio
                         className={`nav-icon w-5 h-5 ${
                           location.pathname === "/library"
-                            ? "text-green-500"
+                            ? "text-white"
                             : "text-gray-300"
                         }`}
                       />
@@ -892,7 +894,7 @@ const Sidebar = () => {
                       <MessageSquare
                         className={`nav-icon w-5 h-5 ${
                           location.pathname === "/chat-jam"
-                            ? "text-green-500"
+                            ? "text-white"
                             : "text-gray-300"
                         }`}
                       />
@@ -903,12 +905,33 @@ const Sidebar = () => {
                       )}
                     </button>
                   </li>
+                  <li>
+                    <button
+                      onClick={() => navigate("/userProfile")}
+                      className={getNavClass("/chat-jam")}
+                      data-path="/userProfile"
+                      aria-label="My Account"
+                    >
+                      <CircleUser
+                        className={`nav-icon w-5 h-5 ${
+                          location.pathname === "/usreProfile"
+                            ? "text-white"
+                            : "text-gray-300"
+                        }`}
+                      />
+                      {!isMobile && (
+                        <span className="font-semibold text-sm">
+                          MY Account
+                        </span>
+                      )}
+                    </button>
+                  </li>
                 </ul>
               </nav>
             </div>
 
             {/* Actions Box */}
-            <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2">
+            <div className="bg-black/60 backdrop-blur-md border border-gray-700/50 rounded-lg p-2">
               <ul className="space-y-1">
                 <li>
                   <button
@@ -921,7 +944,7 @@ const Sidebar = () => {
                       <Plus className="w-3 h-3 text-white" />
                     </div>
                     {!isMobile && (
-                      <span className="font-semibold text-sm">
+                      <span className="font-semibold text-sm text-white">
                         Create Playlist
                       </span>
                     )}
@@ -934,11 +957,11 @@ const Sidebar = () => {
                     data-path="/liked"
                     aria-label={`Liked Songs (${likedSongs.length})`}
                   >
-                    <div className="w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-500 rounded flex items-center justify-center">
+                    <div className="w-5 h-5 bg-gradient-to-br from-zinc-700 to-zinc-900 bg-zinc-800 rounded flex items-center justify-center">
                       <Heart className="w-3 h-3 text-white" />
                     </div>
                     {!isMobile && (
-                      <span className="font-semibold text-sm">
+                      <span className="font-semibold text-sm text-white">
                         Liked Songs ({likedSongs.length})
                       </span>
                     )}
@@ -948,7 +971,7 @@ const Sidebar = () => {
             </div>
 
             {/* Playlists Box */}
-            <div className="bg-gray-900/80 backdrop-blur-md border border-gray-700/50 rounded-lg p-2 flex-1 overflow-y-auto thin-dark-scrollbar mt-5 max-h-[250px] truncate ">
+            <div className="bg-black/10 backdrop-blur-md border border-gray-700/50 rounded-lg p-2 flex-1 overflow-y-auto thin-dark-scrollbar mt-5 max-h-[250px] truncate ">
               <div className="border-t border-gray-800/50 pt-2">
                 {playlists.length > 0 ? (
                   playlists.map((playlist) => (
@@ -959,9 +982,14 @@ const Sidebar = () => {
                         data-path={`/playlist/${playlist.id}`}
                         aria-label={playlist.name}
                       >
-                        <span className="font-medium text-sm">
-                          {playlist.name}
-                        </span>
+                        <div className="w-5 h-5 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded flex items-center justify-center">
+                          <ListMusic className="w-3 h-3 text-white" />
+                        </div>
+                        {!isMobile && (
+                          <span className="font-semibold text-sm text-white p-2">
+                            {playlist.name}
+                          </span>
+                        )}
                       </button>
                     </div>
                   ))
@@ -975,16 +1003,16 @@ const Sidebar = () => {
       )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-zinc-800/30 backdrop-blur-lg flex items-center justify-center z-99">
           <div
             ref={modalRef}
-            className="bg-gray-900/95 backdrop-blur-md p-6 rounded-2xl w-80 max-w-[90vw] border border-gray-700/50 shadow-2xl"
+            className="bg-zinc-900/95 backdrop-blur-md p-6 rounded-2xl w-80 max-w-[90vw] border border-zinc-700/50 shadow-2xl"
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white text-xl font-bold">Create Playlist</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-300 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-700/50"
+                className="text-gray-300 hover:text-white transition-colors p-2 rounded-full hover:bg-zinc-900/50"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -1000,7 +1028,7 @@ const Sidebar = () => {
                   placeholder="My Awesome Playlist"
                   value={playlistName}
                   onChange={(e) => setPlaylistName(e.target.value)}
-                  className="w-full bg-gray-800/80 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-700/50"
+                  className="w-full bg-zinc/60 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-gray-700/50"
                   onKeyPress={handleKeyPress}
                   autoFocus
                   aria-required="true"
@@ -1014,7 +1042,7 @@ const Sidebar = () => {
                   placeholder="Add a description..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-gray-800/80 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-700/50 resize-none"
+                  className="w-full bg-zinc-900/80 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-gray-700/50 resize-none"
                   rows={3}
                 />
               </div>
@@ -1022,14 +1050,14 @@ const Sidebar = () => {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 bg-gray-700/80 text-white py-2 px-3 rounded-lg hover:bg-gray-600/80 transition-colors font-medium"
+                className="flex-1 bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600 py-2 px-3 rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreatePlaylist}
                 disabled={!playlistName.trim()}
-                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg hover:from-green-400 hover:to-emerald-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-gradient-to-r from-gray-100 to-zinc-400 text-black py-2 px-3 rounded-lg hover:from-zinc-400 hover:to-zinc-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create
               </button>

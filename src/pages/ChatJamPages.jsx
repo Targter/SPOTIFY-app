@@ -51,6 +51,10 @@ const ChatJamPage = () => {
   const { currentTrack, isPlaying, currentTime, duration } = useSelector(
     (state) => state.player
   );
+  const isPlayerOpen = useSelector(
+    (state) => state.player.currentTrack !== null
+  );
+
   const currentUser = {
     userId: localStorage.getItem("userId"),
     username: localStorage.getItem("username"),
@@ -60,7 +64,7 @@ const ChatJamPage = () => {
   const [currentFolder, setCurrentFolder] = useState("Featured");
   const [currentPage, setCurrentPage] = useState(1);
   const [toastMessage, setToastMessage] = useState("");
-  const tracksPerPage = 6;
+  const tracksPerPage = 4;
   const audioRef = useRef(null);
   const chatRef = useRef(null);
   const lastSeekTime = useRef(0);
@@ -106,7 +110,7 @@ const ChatJamPage = () => {
     }
 
     if (!socket.connected) {
-      console.log("Socket not connected, attempting to connect...");
+      //  console.log("Socket not connected, attempting to connect...");
       socket.connect();
     }
 
@@ -119,21 +123,21 @@ const ChatJamPage = () => {
     socket.emit("join", userData);
 
     socket.on("userList", (users) => {
-      console.log("Received userList:", users);
+      //  console.log("Received userList:", users);
       dispatch(setConnectedUsers(users));
     });
 
     socket.on(
       "receiveMessage",
       ({ senderId, recipientId, message, timestamp, type, track }) => {
-        console.log("Received message:", {
-          senderId,
-          recipientId,
-          message,
-          timestamp,
-          type,
-          track,
-        });
+        // console.log("Received message:", {
+        //   senderId,
+        //   recipientId,
+        //   message,
+        //   timestamp,
+        //   type,
+        //   track,
+        // });
         dispatch(
           addMessage({
             senderId,
@@ -168,7 +172,7 @@ const ChatJamPage = () => {
         //   audioRef.current.currentTime = 0;
         //   audioRef.current
         //     .play()
-        //     .catch((err) => console.error("Audio play error:", err));
+        // .catch((err) =>  console.error("Audio play error:", err));
         // }
       }
     });
@@ -176,12 +180,12 @@ const ChatJamPage = () => {
     socket.on(
       "playAudio",
       ({ senderId, recipientId, currentTime, previewUrl }) => {
-        console.log("Received playAudio:", {
-          senderId,
-          recipientId,
-          currentTime,
-          previewUrl,
-        });
+        // console.log("Received playAudio:", {
+        //   senderId,
+        //   recipientId,
+        //   currentTime,
+        //   previewUrl,
+        // });
         if (
           recipientId === currentUser.userId ||
           senderId === currentUser.userId
@@ -192,7 +196,7 @@ const ChatJamPage = () => {
             // if (audioRef.current) {
             //   audioRef.current.currentTime = currentTime;
             //   audioRef.current.play().catch((err) => {
-            //     console.error("Audio play error in playAudio:", err);
+            //  console.error("Audio play error in playAudio:", err);
             //     setToastMessage("Failed to play audio. Please try again.");
             //   });
             // }
@@ -204,12 +208,12 @@ const ChatJamPage = () => {
     socket.on(
       "pauseAudio",
       ({ senderId, recipientId, currentTime, previewUrl }) => {
-        console.log("Received pauseAudio:", {
-          senderId,
-          recipientId,
-          currentTime,
-          previewUrl,
-        });
+        // console.log("Received pauseAudio:", {
+        //   senderId,
+        //   recipientId,
+        //   currentTime,
+        //   previewUrl,
+        // });
         if (
           recipientId === currentUser.userId ||
           senderId === currentUser.userId
@@ -229,12 +233,12 @@ const ChatJamPage = () => {
     socket.on(
       "seekAudio",
       ({ senderId, recipientId, currentTime, previewUrl }) => {
-        console.log("Received seekAudio:", {
-          senderId,
-          recipientId,
-          currentTime,
-          previewUrl,
-        });
+        // console.log("Received seekAudio:", {
+        //   senderId,
+        //   recipientId,
+        //   currentTime,
+        //   previewUrl,
+        // });
         if (
           recipientId === currentUser.userId &&
           currentTrack?.preview === previewUrl
@@ -248,21 +252,21 @@ const ChatJamPage = () => {
     );
 
     socket.on("connect", () => {
-      console.log("WebSocket connected:", socket.id);
+      // console.log("WebSocket connected:", socket.id);
       socket.emit("join", userData);
     });
 
     socket.on("connect_error", (err) => {
-      console.error("WebSocket connection error:", err.message);
+      // console.error("WebSocket connection error:", err.message);
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("WebSocket disconnected:", reason);
+      // console.log("WebSocket disconnected:", reason);
       dispatch(setIsPlaying(false));
     });
 
     return () => {
-      console.log("Cleaning up WebSocket listeners");
+      // console.log("Cleaning up WebSocket listeners");
       socket.off("userList");
       socket.off("receiveMessage");
       socket.off("selectTrack");
@@ -289,7 +293,7 @@ const ChatJamPage = () => {
           type: "text",
         },
         (response) => {
-          console.log("sendMessage response:", response);
+          // console.log("sendMessage response:", response);
           if (response.status === "error") {
             console.error("Failed to send message:", response.error);
             setToastMessage("Failed to send message.");
@@ -303,14 +307,14 @@ const ChatJamPage = () => {
   };
 
   const handleTrackSelect = (track) => {
-    console.log("Selected track:", track);
+    // console.log("Selected track:", track);
     dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
     // if (audioRef.current) {
     //   audioRef.current.src = track.preview;
     //   audioRef.current.currentTime = 0;
     //   audioRef.current.play().catch((err) => {
-    //     console.error("Audio play error in handleTrackSelect:", err);
+    //  console.error("Audio play error in handleTrackSelect:", err);
     //     setToastMessage("Failed to play track. Please try another.");
     //   });
     // }
@@ -323,7 +327,7 @@ const ChatJamPage = () => {
           track,
         },
         (response) => {
-          console.log("selectTrack response:", response);
+          // console.log("selectTrack response:", response);
           if (response.status === "error") {
             console.error("Failed to select track:", response.error);
             setToastMessage("Failed to share track.");
@@ -343,7 +347,7 @@ const ChatJamPage = () => {
           track,
         },
         (response) => {
-          console.log("sendMessage response:", response);
+          // console.log("sendMessage response:", response);
           if (response.status === "error") {
             console.error("Failed to send track message:", response.error);
             setToastMessage("Failed to send track message.");
@@ -364,7 +368,7 @@ const ChatJamPage = () => {
     dispatch(setDuration(duration));
     dispatch(setCurrentTime(currentTime));
     // audioRef.current.play().catch((err) => {
-    //   console.error("Audio play error in handlePlay:", err);
+    //  console.error("Audio play error in handlePlay:", err);
     //   setToastMessage("Failed to play track.");
     // });
     if (selectedUserId) {
@@ -378,7 +382,7 @@ const ChatJamPage = () => {
           previewUrl: track.preview,
         },
         (response) => {
-          console.log("playAudio response:", response);
+          // console.log("playAudio response:", response);
           if (response.status === "error") {
             console.error("Failed to play audio:", response.error);
             setToastMessage("Failed to sync play.");
@@ -406,7 +410,7 @@ const ChatJamPage = () => {
           previewUrl: track.preview,
         },
         (response) => {
-          console.log("pauseAudio response:", response);
+          // console.log("pauseAudio response:", response);
           if (response.status === "error") {
             console.error("Failed to pause audio:", response.error);
             setToastMessage("Failed to sync pause.");
@@ -434,7 +438,7 @@ const ChatJamPage = () => {
           previewUrl: currentTrack.preview,
         },
         (response) => {
-          console.log("seekAudio response:", response);
+          // console.log("seekAudio response:", response);
           if (response.status === "error") {
             console.error("Failed to seek audio:", response.error);
             setToastMessage("Failed to sync seek.");
@@ -461,7 +465,7 @@ const ChatJamPage = () => {
             previewUrl: currentTrack.preview,
           },
           (response) => {
-            console.log("seekAudio response (time update):", response);
+            // console.log("seekAudio response (time update):", response);
             if (response.status === "error") {
               console.error("Failed to sync time update:", response.error);
             }
@@ -502,14 +506,14 @@ const ChatJamPage = () => {
   const conversationMessages = getConversationMessages();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-sans relative">
-      <header className="bg-gray-800 p-4 shadow-md">
+    <div className="min-h-screen  text-white font-sans relative">
+      <header className=" p-4 shadow-md">
         <h1 className="text-2xl md:text-3xl font-bold text-center">
           ChatJam: Connect & Jam with Friends
         </h1>
       </header>
-      <div className="flex flex-col lg:flex-row gap-4 p-4 max-w-7xl mx-auto">
-        <div className="lg:w-1/3 bg-gray-800 rounded-xl p-4 shadow-lg">
+      <div className="flex flex-col lg:flex-row gap-4 p-4 max-w-7xl mx-auto ">
+        <div className="lg:w-1/3  rounded-xl p-4 shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Music Library</h2>
           <div className="flex gap-2 mb-4 overflow-x-auto">
             {Object.keys(folders).map((folder) => (
@@ -521,8 +525,8 @@ const ChatJamPage = () => {
                 }}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentFolder === folder
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
+                    : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
                 }`}
               >
                 {folder}
@@ -535,7 +539,7 @@ const ChatJamPage = () => {
                 <div
                   key={track.id}
                   onClick={() => handleTrackSelect(track)}
-                  className="group bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+                  className="group  rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow cursor-pointer"
                   disabled={false}
                 >
                   <TrackCard
@@ -543,11 +547,11 @@ const ChatJamPage = () => {
                     playlist={currentTracks}
                     className={`bg-gray-700/80 p-3 ${
                       currentTrack?.id === track.id
-                        ? "ring-2 ring-blue-500"
+                        ? "ring-2 ring-gray-800"
                         : ""
                     }`}
                   />
-                  <div className="bg-blue-600 text-white text-center py-2 group-hover:bg-blue-500 transition-colors">
+                  <div className="bg-gradient-to-r from-gray-500 to-zinc-900  text-white text-center py-2 group-hover:bg-blue-500 transition-colors">
                     Play Now
                   </div>
                 </div>
@@ -563,7 +567,7 @@ const ChatJamPage = () => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600"
+                className="px-3 py-1 bg-gradient-to-r from-zinc-900 to-gray-500  hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 rounded-md disabled:opacity-50 hover:bg-gray-600"
               >
                 Previous
               </button>
@@ -573,19 +577,21 @@ const ChatJamPage = () => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600"
+                className="px-3 py-1 bg-gradient-to-r from-zinc-900 to-gray-500  hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 rounded-md disabled:opacity-50 hover:bg-gray-600"
               >
                 Next
               </button>
             </div>
           )}
         </div>
-        <div className="lg:w-2/3 flex flex-col gap-4">
-          <div className="bg-gray-800 rounded-xl p-4 shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Connected Users</h2>
-            {/* {console.log("connectusers", connectedUsers)} */}
+        <div className="lg:w-2/3 flex flex-col gap-4 z-81">
+          <div className=" rounded-xl p-4 shadow-lg bg-gradient-to-r from-zinc-900 via-black to-zinc-900 disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-800 hover:via-black hover:to-zinc-700 flex flex-col items-start ">
+            <h2 className="font-semibold mb-4 text-center text-3xl">
+              Connected Users
+            </h2>
+            {/* { console.log("connectusers", connectedUsers)} */}
             {connectedUsers.length <= 1 ? (
-              <p className="text-gray-400">No users connected</p>
+              <p className="text-zinc-400">No users connected</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                 {connectedUsers
@@ -602,8 +608,8 @@ const ChatJamPage = () => {
                       }}
                       className={`p-3 rounded-lg cursor-pointer flex items-center gap-3 transition-colors ${
                         selectedUserId === user.userId
-                          ? "bg-blue-600"
-                          : "bg-gray-700 hover:bg-gray-600"
+                          ? "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
+                          : "bg-zinc-900 hover:bg-zinc-600"
                       } ${
                         messages[user.userId]?.some(
                           (msg) =>
@@ -614,11 +620,11 @@ const ChatJamPage = () => {
                                 `lastRead_${user.userId}`
                               ) || 0)
                         )
-                          ? "border-l-4 border-green-400"
+                          ? "border-l-4 border-gray-800"
                           : ""
                       }`}
                     >
-                      <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white font-semibold">
+                      <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center text-white font-semibold">
                         {user.username[0].toUpperCase()}
                       </div>
                       <div>
@@ -632,8 +638,12 @@ const ChatJamPage = () => {
               </div>
             )}
           </div>
-          <div className="flex-1 bg-gray-800 rounded-xl p-4 shadow-lg flex flex-col">
-            <h3 className="text-xl font-semibold mb-4">
+          <div
+            className={`flex-1 rounded-xl bg-white/10 backdrop-blur-xl  p-4 shadow-lg flex flex-col hide-scrollbar  ${
+              isPlayerOpen ? "max-h-[500px]" : "max-h-[600px]"
+            }  overflow-y-scroll `}
+          >
+            <h3 className="text-xl font-semibold mb-4 text-white ">
               {selectedUserId
                 ? `Chatting with ${
                     connectedUsers.find((u) => u.userId === selectedUserId)
@@ -643,7 +653,7 @@ const ChatJamPage = () => {
             </h3>
             <div
               ref={chatRef}
-              className="flex-1 overflow-y-auto p-4 bg-gray-900 rounded-lg mb-4"
+              className="flex-1 overflow-y-auto p-4  rounded-lg mb-4 hide-scrollbar "
             >
               {selectedUserId ? (
                 conversationMessages.length > 0 ? (
@@ -657,59 +667,65 @@ const ChatJamPage = () => {
                       } mb-4`}
                     >
                       <div
-                        className={`flex items-start gap-2 max-w-[80%] p-2 rounded-xl ${
+                        className={`flex items-start gap-2 max-w-[70%] p-2 rounded-xl ${
                           msg.senderId === currentUser.userId
                             ? msg.type === "trackMessage"
-                              ? "bg-blue-500 text-white"
-                              : "bg-gray-500 text-white"
+                              ? "bg-white/10 backdrop-blur-5xl text-white"
+                              : "bg-white/10 backdrop-blur-5xl text-white"
                             : msg.type === "trackMessage"
-                            ? "bg-blue-700 text-white"
-                            : "bg-gray-700 text-white"
+                            ? "bg-white/10 backdrop-blur-5xl text-white"
+                            : "bg-white/10 backdrop-blur-5xl text-white"
                         }`}
                       >
-                        <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-white font-semibold">
-                          {connectedUsers
-                            .find((u) => u.userId === msg.senderId)
-                            ?.username[0]?.toUpperCase() || "?"}
-                        </div>
                         <div>
                           {msg.type === "trackMessage" ? (
-                            <div className="flex flex-col gap-2">
-                              {msg.track?.album.cover_small && (
-                                <img
-                                  src={msg.track.album.cover_small}
-                                  alt={msg.track.title}
-                                  className="w-12 h-12 rounded-md"
-                                />
-                              )}
-                              <p>{msg.message}</p>
-                              <div className="flex gap-2">
+                            <div className="flex flex-col gap-3  rounded-lg w-full">
+                              {/* Album art + message row */}
+                              <div className="flex gap-3 items-start ">
+                                {msg.track?.album.cover_small && (
+                                  <img
+                                    src={msg.track.album.cover_small}
+                                    alt={msg.track.title}
+                                    className="w-12 h-12 rounded-md flex-shrink-0 object-cover"
+                                  />
+                                )}
+                                <p className="text-zinc-100 flex-1 text-sm sm:text-base break-words">
+                                  {msg.message}
+                                </p>
+                              </div>
+
+                              {/* Button group */}
+                              <div className="flex gap-2 flex-wrap">
                                 <button
                                   onClick={() => handlePlay(msg.track)}
                                   disabled={
                                     isPlaying &&
                                     currentTrack?.id === msg.track?.id
                                   }
-                                  className={`px-3 py-1 text-sm rounded-md ${
+                                  className={`px-4 py-2 text-lg sm:text-sm rounded-md transition-colors ${
                                     isPlaying &&
                                     currentTrack?.id === msg.track?.id
-                                      ? "bg-gray-600 text-gray-400"
-                                      : "bg-blue-600 text-white hover:bg-blue-500"
+                                      ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black cursor-not-allowed"
+                                      : "bg-gradient-to-r from-gray-100 to-zinc-400 text-black hover:bg-gray-600 "
                                   }`}
                                 >
-                                  Play
+                                  {isPlaying &&
+                                  currentTrack?.id === msg.track?.id
+                                    ? "Playing"
+                                    : "Play"}
                                 </button>
+
                                 <button
                                   onClick={() => handlePause(msg.track)}
                                   disabled={
                                     !isPlaying ||
                                     currentTrack?.id !== msg.track?.id
                                   }
-                                  className={`px-3 py-1 text-sm rounded-md ${
+                                  className={`px-3 py-2 text-lg sm:text-sm rounded-md transition-colors ${
                                     !isPlaying ||
                                     currentTrack?.id !== msg.track?.id
-                                      ? "bg-gray-600 text-gray-400"
-                                      : "bg-blue-600 text-white hover:bg-blue-500"
+                                      ? "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600 cursor-not-allowed"
+                                      : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600 "
                                   }`}
                                 >
                                   Pause
@@ -719,20 +735,27 @@ const ChatJamPage = () => {
                           ) : (
                             <p>{msg.message}</p>
                           )}
-                          <p className="text-xs text-gray-400 mt-1">
-                            {new Date(msg.timestamp).toLocaleTimeString()}
-                          </p>
+                          <div className="flex w-full  justify-end gap-3">
+                            <p className="text-xs text-gray-400">
+                              {new Date(msg.timestamp).toLocaleTimeString()}
+                            </p>
+                            <div className="w-8 h-8 p-1 rounded-full  bg-zinc-800 flex items-center justify-center text-white font-semibold">
+                              {connectedUsers
+                                .find((u) => u.userId === msg.senderId)
+                                ?.username[0]?.toUpperCase() || "?"}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-400 text-center">No messages yet</p>
+                  <p className="text-white text-lg text-center">
+                    No messages yet
+                  </p>
                 )
               ) : (
-                <p className="text-gray-400 text-center">
-                  Select a user to chat
-                </p>
+                <p className="text-white text-center">Select a user to chat</p>
               )}
             </div>
             {selectedUserId && (
@@ -743,18 +766,18 @@ const ChatJamPage = () => {
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 p-3 rounded-lg bg-white/10 backdrop-blur-md  text-white border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-500"
                     onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   />
                   <button
                     onClick={handleSendMessage}
-                    className="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    className="px-4 py-2 bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gradient-to-r hover:from-zinc-600  hover:to-zinc-800  rounded-lg transition-colors"
                   >
                     Send
                   </button>
                 </div>
                 {currentTrack && (
-                  <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                  <div className="bg-white/10 backdrop-blur-5xl  p-4 rounded-lg shadow-md">
                     <div className="flex items-center gap-3">
                       {currentTrack.album.cover_small && (
                         <img
@@ -788,8 +811,8 @@ const ChatJamPage = () => {
                         disabled={isPlaying || !currentTrack}
                         className={`px-4 py-2 rounded-lg ${
                           isPlaying || !currentTrack
-                            ? "bg-gray-600 text-gray-400"
-                            : "bg-blue-600 text-white hover:bg-blue-500"
+                            ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
+                            : "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
                         }`}
                       >
                         Play
@@ -799,8 +822,8 @@ const ChatJamPage = () => {
                         disabled={!isPlaying || !currentTrack}
                         className={`px-4 py-2 rounded-lg ${
                           !isPlaying || !currentTrack
-                            ? "bg-gray-600 text-gray-400"
-                            : "bg-blue-600 text-white hover:bg-blue-500"
+                            ? "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
+                            : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
                         }`}
                       >
                         Pause
@@ -812,10 +835,10 @@ const ChatJamPage = () => {
                         step="0.1"
                         value={currentTime}
                         onChange={handleSeek}
-                        className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                        className="flex-1 h-2 bg-white/10 backdrop-white-md rounded-lg appearance-none cursor-pointer text-black"
                         disabled={!currentTrack}
                       />
-                      <span className="text-sm text-gray-400">
+                      <span className="text-sm text-white">
                         {Math.floor(currentTime / 60)}:
                         {Math.floor(currentTime % 60)
                           .toString()
@@ -834,7 +857,7 @@ const ChatJamPage = () => {
         </div>
       </div>
       {toastMessage && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-zinc-800 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
           {toastMessage}
         </div>
       )}

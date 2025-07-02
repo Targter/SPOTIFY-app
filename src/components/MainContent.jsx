@@ -1,277 +1,6 @@
-// //
-// import React, { useEffect, useRef, useState } from "react";
-// import { useGetTopChartsQuery } from "../services/ShazamCore";
-// import TrackCard from "./TrackCard";
-// import TrackRow from "./TrackRow";
-// import { useTypedSelector } from "../hooks/useTypedSelector";
-// import { gsap } from "gsap";
-// import { Plus } from "lucide-react";
-// import Loading from "./Loading";
-// import PlaylistSkeleton from "../skeletons/PlayListSkeleton";
-// import FeaturedGridSkeleton from "../skeletons/Cardskeleton";
-// import { data } from "./FakeData";
-// const convertAppleMusicTrack = (track) => ({
-//   key: track.id,
-//   id: track.id,
-//   title: track.attributes.name,
-//   artist: {
-//     name: track.attributes.artistName || "Unknown Artist",
-//     id: track.relationships?.artists?.data?.[0]?.id || "",
-//     picture_small:
-//       track.attributes.artwork?.url.replace(/440x440bb\.jpg$/, "64x64bb.jpg") ||
-//       "https://via.placeholder.com/64x64",
-//   },
-//   album: {
-//     id: track.id,
-//     title: track.attributes.albumName,
-//     cover_small:
-//       track.attributes.artwork?.url.replace(/440x440bb\.jpg$/, "64x64bb.jpg") ||
-//       "https://via.placeholder.com/64x64",
-//     cover_medium:
-//       track.attributes.artwork?.url || "https://via.placeholder.com/300x300",
-//   },
-//   preview: track.attributes.previews?.[0]?.url || "",
-//   duration: Math.floor(track.attributes.durationInMillis / 1000) || 0,
-//   explicit: track.attributes.contentRating === "explicit",
-//   genres: track.attributes.genreNames || [],
-//   releaseDate: track.attributes.releaseDate || "",
-//   isrc: track.attributes.isrc || "",
-// });
-
-// const MainContent = () => {
-//   const { recentlyPlayed } = useTypedSelector((state) => state.playlist);
-//   const bannerRef = useRef(null);
-//   const contentRef = useRef(null);
-//   const [recentlyPlayedLimit, setRecentlyPlayedLimit] = useState(3);
-//   const [madeForYouLimit, setMadeForYouLimit] = useState(5);
-//   const [featuredTracksLimit, setFeaturedTracksLimit] = useState(3);
-
-//   const { isLoading, error } = useGetTopChartsQuery({
-//     countryCode: "IN",
-//     page: 1,
-//     pageSize: 20,
-//   });
-
-//   if (isLoading) console.log("Loading top charts...", data);
-//   if (error) console.error("Error loading top charts:", error);
-
-//   const featuredTracks = data ? data.map(convertAppleMusicTrack) : [];
-
-//   // llocalStoreage Items;
-//   useEffect(() => {
-//     const userId = localStorage.getItem("userId");
-//     if (!userId) {
-//       function generateUser() {
-//         function getRandomNumber(min, max) {
-//           return Math.floor(Math.random() * (max - min + 1)) + min;
-//         }
-
-//         function getRandomElement(array) {
-//           return array[getRandomNumber(0, array.length - 1)];
-//         }
-
-//         const userId = getRandomNumber(1000, 9999);
-
-//         const adjectives = [
-//           "cool",
-//           "sunny",
-//           "dark",
-//           "silent",
-//           "bright",
-//           "wild",
-//         ];
-//         const nouns = ["Shadow", "Tiger", "Duck", "Wolf", "Eagle", "Lion"];
-//         const username =
-//           getRandomElement(adjectives) +
-//           getRandomElement(nouns) +
-//           getRandomNumber(10, 99);
-
-//         const domains = ["example.com", "mail.com", "webmail.org"];
-//         const email = `${username.toLowerCase()}@${getRandomElement(domains)}`;
-
-//         return { userId, username, email };
-//       }
-
-//       // Example usage
-//       const user = generateUser();
-//       localStorage.setItem("email", user.email);
-//       localStorage.setItem("userId", user.userId);
-//       localStorage.setItem("username", user.username);
-//       console.log("newUsers", user);
-//     }
-//   }, []);
-
-//   // useEffect(() => {
-//   //   gsap.to(bannerRef.current, {
-//   //     backgroundPositionX: "100%",
-//   //     duration: 1,
-//   //     repeat: -1,
-//   //     yoyo: true,
-//   //     ease: "sine",
-//   //   });
-
-//   //   gsap.fromTo(
-//   //     contentRef.current.children,
-//   //     { opacity: 0, y: 50 },
-//   //     {
-//   //       opacity: 1,
-//   //       y: 0,
-//   //       scale: 1,
-//   //       duration: 0,
-//   //       ease: "sine",
-//   //       stagger: 0.2,
-//   //     }
-//   //   );
-
-//   //   const trackCards = document.querySelectorAll(".track-card");
-//   //   trackCards.forEach((card) => {
-//   //     card.addEventListener("mouseenter", () => {
-//   //       gsap.to(card, {
-//   //         scale: 1.05,
-//   //         boxShadow: "0 8px 24px rgba(255, 255, 255, 0.2)",
-//   //         duration: 0.3,
-//   //         ease: "sine.inOut",
-//   //       });
-//   //     });
-//   //     card.addEventListener("mouseleave", () => {
-//   //       gsap.to(card, {
-//   //         scale: 1,
-//   //         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-//   //         duration: 0.3,
-//   //         ease: "sine.inOut",
-//   //       });
-//   //     });
-//   //   });
-//   // }, [
-//   //   featuredTracks,
-//   //   recentlyPlayed,
-//   //   recentlyPlayedLimit,
-//   //   madeForYouLimit,
-//   //   featuredTracksLimit,
-//   // ]);
-
-//   const getGreeting = () => {
-//     const hour = new Date().getHours();
-//     if (hour < 12) return "Good Morning";
-//     if (hour < 18) return "Good Afternoon";
-//     return "Good Evening";
-//   };
-
-//   const handleLoadMoreMadeForYou = () => {
-//     setMadeForYouLimit((prev) => prev + 5);
-//   };
-
-//   const handleLoadMoreFeaturedTracks = () => {
-//     setFeaturedTracksLimit((prev) => prev + 6);
-//   };
-
-//   return (
-//     <div className="flex-1 bg-gradient-to-b from-gray-950 to-black text-white p-8 overflow-y-auto min-h-screen">
-//       <div ref={contentRef}>
-//         <div
-//           ref={bannerRef}
-//           className="relative mb-8 p-8 rounded-2xl bg-gradient-to-r from-indigo-900 via-purple-900 to-blue-900 overflow-hidden"
-//           style={{
-//             backgroundImage:
-//               "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
-//             backgroundSize: "100px 100px",
-//           }}
-//         >
-//           <div className="absolute inset-0 bg-black/50"></div>
-//           <div className="relative z-10">
-//             <h1 className="text-4xl font-extrabold text-white mb-2">
-//               {getGreeting()}
-//             </h1>
-//             <p className="text-gray-200 text-lg">
-//               Discover new music with Musicify
-//             </p>
-//           </div>
-//         </div>
-
-//         <section className="mb-12">
-//           <div className="flex justify-between items-center">
-//             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
-//               Made for You
-//             </h2>
-//             {madeForYouLimit < featuredTracks.length && !isLoading && (
-//               <button
-//                 onClick={handleLoadMoreMadeForYou}
-//                 className="flex items-center gap-2 text-green-500 hover:text-green-400 transition-colors font-medium px-4 py-2 rounded-lg hover:bg-green-500/10"
-//               >
-//                 <Plus className="w-5 h-5" />
-//                 More
-//               </button>
-//             )}
-//           </div>
-//           {isLoading ? (
-//             <div className="py-2">
-//               <FeaturedGridSkeleton />
-//             </div>
-//           ) : (
-//             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-//               {featuredTracks.slice(0, madeForYouLimit).map((track) => (
-//                 <TrackCard
-//                   key={track.id}
-//                   track={track}
-//                   playlist={featuredTracks}
-//                   className="track-card bg-gray-900/80 backdrop-blur-md rounded-xl shadow-lg border border-gray-700"
-//                 />
-//               ))}
-//             </div>
-//           )}
-//         </section>
-//         <section className="mb-12 mt-12">
-//           <div className="flex justify-between items-center">
-//             <h2 className="text-3xl font-bold text-white mb-6">
-//               Featured Tracks
-//             </h2>
-//             {featuredTracksLimit < featuredTracks.length && (
-//               <button
-//                 onClick={handleLoadMoreFeaturedTracks}
-//                 className=" flex items-center gap-2 text-green-500 hover:text-green-400 transition-colors font-medium px-4  rounded-lg hover:bg-green-500/10"
-//               >
-//                 <Plus className="w-5 h-5" />
-//                 More
-//               </button>
-//             )}
-//           </div>
-//           {isLoading ? (
-//             <div className=" w-full h-full ">
-//               <PlaylistSkeleton />
-//             </div>
-//           ) : (
-//             <>
-//               <div className="space-y-2">
-//                 {featuredTracks
-//                   .slice(0, featuredTracksLimit)
-//                   .map((track, index) => (
-//                     <TrackRow
-//                       key={track.id}
-//                       track={track}
-//                       index={index}
-//                       playlist={featuredTracks}
-//                       className="track-card bg-gray-900/80 backdrop-blur-md rounded-lg shadow-md border border-gray-700"
-//                     />
-//                   ))}
-//               </div>
-//             </>
-//           )}
-//         </section>
-
-//         <div className="mb-44"></div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MainContent;
-
-// //
-
-//
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useGetTopChartsQuery } from "../services/ShazamCore";
+// import { useGetTopChartsQuery } from "../services/ShazamCore";
 import TrackCard from "./TrackCard";
 import TrackRow from "./TrackRow";
 import { useTypedSelector } from "../hooks/useTypedSelector";
@@ -281,8 +10,8 @@ import PlaylistSkeleton from "../skeletons/PlayListSkeleton";
 import FeaturedGridSkeleton from "../skeletons/Cardskeleton";
 import { data } from "./FakeData";
 import { setCurrentTrack, setIsPlaying } from "../store/slices/playerSlice";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
+import { Briefcase, ChevronLeft, ChevronRight, Linkedin } from "lucide-react";
+// import { Link } from "react-router-dom";
 const convertAppleMusicTrack = (track) => ({
   key: track.id,
   id: track.id,
@@ -323,6 +52,7 @@ const MainContent = () => {
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [visibleGenresLimit, setVisibleGenresLimit] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({
     username: localStorage.getItem("username") || "Guest",
     email: localStorage.getItem("email") || "",
@@ -330,14 +60,16 @@ const MainContent = () => {
   });
   const madeForYouPerPage = 5;
   const featuredTracksPerPage = 20;
+  const error = false;
+  // const isLoading = false;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const { isLoading, error } = useGetTopChartsQuery({
-    countryCode: "IN",
-    page: 1,
-    pageSize: 20,
-  });
-
-  if (isLoading) console.log("Loading top charts...", data);
+  // if (isLoading) console.log("Loading top charts...", data);
   if (error) console.error("Error loading top charts:", error);
 
   const featuredTracks = data ? data.map(convertAppleMusicTrack) : [];
@@ -366,22 +98,22 @@ const MainContent = () => {
   );
 
   // Debugging logs
-  console.log("Featured Tracks Length:", featuredTracks.length);
-  console.log("All Genres:", genres);
-  console.log("Visible Genres:", visibleGenres);
-  console.log("Selected Genre:", selectedGenre);
-  console.log("Filtered Tracks:", filteredTracks);
-  console.log("Made for You:", {
-    page: madeForYouPage,
-    totalPages: madeForYouTotalPages,
-    tracks: madeForYouTracks,
-  });
-  console.log("Featured Tracks:", {
-    page: featuredTracksPage,
-    totalPages: featuredTracksTotalPages,
-    tracks: featuredTracksPaginated,
-  });
-  console.log("User Data:", userData);
+  // console.log("Featured Tracks Length:", featuredTracks.length);
+  // console.log("All Genres:", genres);
+  // console.log("Visible Genres:", visibleGenres);
+  // console.log("Selected Genre:", selectedGenre);
+  // console.log("Filtered Tracks:", filteredTracks);
+  // console.log("Made for You:", {
+  //   page: madeForYouPage,
+  //   totalPages: madeForYouTotalPages,
+  //   tracks: madeForYouTracks,
+  // });
+  // console.log("Featured Tracks:", {
+  //   page: featuredTracksPage,
+  //   totalPages: featuredTracksTotalPages,
+  //   tracks: featuredTracksPaginated,
+  // });
+  // console.log("User Data:", userData);
 
   // Generate page range with ellipses
   const generatePageRange = (currentPage, totalPages) => {
@@ -443,7 +175,7 @@ const MainContent = () => {
     localStorage.setItem("email", email);
     localStorage.setItem("userId", userId.toString());
     localStorage.setItem("username", username);
-    console.log("newUsers", newUser);
+    // console.log("newUsers", newUser);
     return newUser;
   };
 
@@ -506,19 +238,19 @@ const MainContent = () => {
   const handleMadeForYouPageChange = (page) => {
     if (page >= 1 && page <= madeForYouTotalPages) {
       setMadeForYouPage(page);
-      console.log("Made for You page changed to:", page);
+      // console.log("Made for You page changed to:", page);
     }
   };
 
   const handleFeaturedTracksPageChange = (page) => {
     if (page >= 1 && page <= featuredTracksTotalPages) {
       setFeaturedTracksPage(page);
-      console.log("Featured Tracks page changed to:", page);
+      // console.log("Featured Tracks page changed to:", page);
     }
   };
 
   const handleTrackSelect = (track) => {
-    console.log("Selected track:", track);
+    // console.log("Selected track:", track);
     dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
   };
@@ -527,22 +259,22 @@ const MainContent = () => {
     if (value === "Show More") {
       const newLimit = Math.min(visibleGenresLimit + 5, genres.length - 1);
       setVisibleGenresLimit(newLimit);
-      console.log("Show More genres, new limit:", newLimit);
+      // console.log("Show More genres, new limit:", newLimit);
       if (!visibleGenres.includes(selectedGenre)) {
         setSelectedGenre("All");
         setMadeForYouPage(1);
         setFeaturedTracksPage(1);
-        console.log("Reset to All due to genre limit change");
+        // console.log("Reset to All due to genre limit change");
       }
       if (madeForYouSelectRef.current) {
         madeForYouSelectRef.current.blur();
-        console.log("Dropdown closed after Show More");
+        // console.log("Dropdown closed after Show More");
       }
     } else {
       setSelectedGenre(value);
       setMadeForYouPage(1);
       setFeaturedTracksPage(1);
-      console.log("Selected genre:", value);
+      // console.log("Selected genre:", value);
     }
   };
 
@@ -564,22 +296,22 @@ const MainContent = () => {
     localStorage.setItem("email", email);
     localStorage.setItem("userId", userId);
     setIsModalOpen(false);
-    console.log("User data updated:", { username, email, userId });
+    // console.log("User data updated:", { username, email, userId });
   };
 
   const handleResetProfile = () => {
     const newUser = generateUser();
     setUserData(newUser);
     setIsModalOpen(false);
-    console.log("Profile reset:", newUser);
+    // console.log("Profile reset:", newUser);
   };
 
   return (
     <div className="flex-1  text-white p-8 overflow-y-auto min-h-screen">
       <div ref={contentRef}>
-        <div
+        {/* <div
           ref={bannerRef}
-          className="relative mb-8 p-8 rounded-2xl  overflow"
+          className="relative mb-6 p-6 rounded-2xl  overflow"
           style={{
             backgroundImage:
               "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
@@ -594,19 +326,51 @@ const MainContent = () => {
             <p className="text-gray-200 text-lg">
               Discover new music with Musicify
             </p>
-            <p className="text-gray-200 text-lg mt-1">
-              Welcome, {userData.username}
-            </p>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="mt-4 px-4 py-2 text-white rounded-md hover:bg-blue-500 transition-colors text-sm font-medium z-99"
-            >
-              Edit Profile
-            </button>
+          </div>
+        </div> */}
+        <div
+          ref={bannerRef}
+          className="relative mb-8 p-6 rounded-2xl  overflow"
+          style={{
+            backgroundImage:
+              "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
+            backgroundSize: "100px 100px",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/20 to-zinc-900/20 blur-xl" />
+          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2">
+                {getGreeting()}
+              </h1>
+              <p className="text-gray-200 text-sm sm:text-base md:text-lg">
+                Discover new music with Musicify
+              </p>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <a href="https://www.abhaybansal.in" target="_blank">
+                <div
+                  className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2  bg-gradient-to-r from-zinc-800 to-zinc-900 text-gray-300 hover:bg-gray-700 hover:text-white border-zinc-800 rounded-md hover:from-zinc-800 hover:to-zinc-900 transition-all duration-300 text-sm sm:text-base font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-zinc-500 z-99"
+                  aria-label="View portfolio"
+                >
+                  <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Portfolio</span>
+                </div>
+              </a>
+
+              <a href="https://www.linkedin.com/in/bansalabhay" target="_blank">
+                <button
+                  className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2  bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-900 hover:text-white border-gray-700 rounded-md hover:from-zinc-900 hover:to-zinc-900 transition-all duration-300 text-sm sm:text-base font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-zinc-500 z-99"
+                  aria-label="Visit LinkedIn profile"
+                >
+                  <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>LinkedIn</span>
+                </button>
+              </a>
+            </div>
           </div>
         </div>
-
-        {isModalOpen && (
+        {/* {isModalOpen && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-90 ">
             <div className="modal bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
               <h3 className="text-xl font-bold text-white mb-4">
@@ -675,23 +439,27 @@ const MainContent = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <section className="mb-12">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          <div className="flex justify-between items-center mb-5">
+            <h2 className="mb-2 text-2xl sm:text-3xl font-bold text-white">
               Made for You
             </h2>
           </div>
-          <div className="mb-4">
+          <div className="mb-5">
             <select
               ref={madeForYouSelectRef}
               value={selectedGenre}
               onChange={(e) => handleGenreChange(e.target.value)}
-              className="w-full sm:w-64 bg-gray-700 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full sm:w-64 bg-zinc-900 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
             >
               {visibleGenres.map((genre) => (
-                <option key={genre} value={genre}>
+                <option
+                  key={genre}
+                  value={genre}
+                  className="bg-zinc-600 hover:bg-zinc-700 focus:bg-zinc-700 focus:outline-none"
+                >
                   {genre}
                 </option>
               ))}
@@ -717,7 +485,7 @@ const MainContent = () => {
                       <TrackCard
                         track={track}
                         playlist={filteredTracks}
-                        className=" bg-gray-900/80 backdrop-blur-md rounded-xl p-3"
+                        className=" bg-zinc-900 backdrop-blur-md rounded-xl p-3"
                       />
                     </div>
                   ))
@@ -728,14 +496,14 @@ const MainContent = () => {
                 )}
               </div>
               {madeForYouTotalPages > 1 && (
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 mt-6">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 mt-8 mb-3">
                   {/* Previous Button - optimized for mobile */}
                   <button
                     onClick={() =>
                       handleMadeForYouPageChange(madeForYouPage - 1)
                     }
                     disabled={madeForYouPage === 1}
-                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600 text-xs sm:text-sm font-medium transition-colors"
+                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors"
                   >
                     ← Previous
                   </button>
@@ -761,8 +529,8 @@ const MainContent = () => {
                               onClick={() => handleMadeForYouPageChange(page)}
                               className={`min-w-[2rem] sm:min-w-[2.5rem] px-2 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                                 madeForYouPage === page
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                  ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
+                                  : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
                               }`}
                               aria-current={
                                 madeForYouPage === page ? "page" : undefined
@@ -775,7 +543,7 @@ const MainContent = () => {
                       </div>
                     </div>
                     {/* Gradient fade indicators for scrollable content */}
-                    <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-gray-900 to-transparent pointer-events-none sm:hidden"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-zinc-800 to-gray-900 pointer-events-none sm:hidden"></div>
                     <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-gray-900 to-transparent pointer-events-none sm:hidden"></div>
                   </div>
 
@@ -785,7 +553,7 @@ const MainContent = () => {
                       handleMadeForYouPageChange(madeForYouPage + 1)
                     }
                     disabled={madeForYouPage === madeForYouTotalPages}
-                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600 text-xs sm:text-sm font-medium transition-colors"
+                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors"
                   >
                     Next →
                   </button>
@@ -808,11 +576,11 @@ const MainContent = () => {
                 onClick={() => handleGenreChange(genre)}
                 className={`
         px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap
-        flex-1 min-w-[30%] sm:min-w-0
+        flex-1 min-w-[10%] sm:min-w-0 lg:max-w-[10%]
         ${
           selectedGenre === genre
-            ? "bg-blue-600 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+            ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
+            : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-300"
         }
       `}
               >
@@ -839,7 +607,7 @@ const MainContent = () => {
                         track={track}
                         index={index}
                         playlist={filteredTracks}
-                        className="track-card bg-gray-900/80 backdrop-blur-md rounded-lg shadow-md border border-gray-700"
+                        className="track-card bg-zinc-900/80 backdrop-blur-md rounded-lg shadow-md border border-gray-700"
                       />
                     </div>
                   ))
@@ -851,13 +619,12 @@ const MainContent = () => {
               </div>
               {featuredTracksTotalPages > 1 && (
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6 w-full">
-                  {/* Previous Button - full width on mobile */}
                   <button
                     onClick={() =>
                       handleFeaturedTracksPageChange(featuredTracksPage - 1)
                     }
                     disabled={featuredTracksPage === 1}
-                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span>Previous</span>
@@ -866,8 +633,8 @@ const MainContent = () => {
                   {/* Page Numbers - scrollable on mobile */}
                   <div className="w-full sm:w-auto overflow-x-auto py-1 hide-scrollbar relative">
                     {/* Scroll indicators for mobile */}
-                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-gray-900 to-transparent pointer-events-none sm:hidden"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-gray-900 to-transparent pointer-events-none sm:hidden"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none sm:hidden"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none sm:hidden"></div>
 
                     <div className="flex gap-1 justify-center min-w-max px-6 sm:px-0">
                       {generatePageRange(
@@ -887,8 +654,8 @@ const MainContent = () => {
                             onClick={() => handleFeaturedTracksPageChange(page)}
                             className={`min-w-[2.25rem] px-2 py-1 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                               featuredTracksPage === page
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                ? "bg-gradient-to-r from-gray-100 to-zinc-400 text-black"
+                                : "bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-600"
                             }`}
                             aria-current={
                               featuredTracksPage === page ? "page" : undefined
@@ -907,7 +674,7 @@ const MainContent = () => {
                       handleFeaturedTracksPageChange(featuredTracksPage + 1)
                     }
                     disabled={featuredTracksPage === featuredTracksTotalPages}
-                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gray-700 rounded-md disabled:opacity-50 hover:bg-gray-600 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                    className="w-full sm:w-auto px-3 py-2 sm:px-4 bg-gradient-to-r from-zinc-900 to-gray-500 rounded-md disabled:opacity-50 hover:bg-gradient-to-r hover:from-zinc-500 hover:to-gray-900 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
                   >
                     <span>Next</span>
                     <ChevronRight className="w-4 h-4" />

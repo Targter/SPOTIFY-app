@@ -277,7 +277,7 @@ const GenreGrid = () => {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl sm:text-4xl font-bold  mb-6 sm:mb-8 text-center sm:text-left bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+      <h2 className="text-3xl sm:text-4xl font-bold  mb-6 sm:mb-8 text-center sm:text-left text-zinc-300 bg-clip-text ">
         Explore Music Genres
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-2 @7xl:grid-cols-cols-2 xl:grid-cols-3 gap-2 lg:gap-2">
