@@ -192,7 +192,7 @@ import ArtistView from "./ArtistView"; // Adjust path as needed
 import GenreGrid from "./GenreGrid"; // Adjust path as needed
 import AlbumGrid from "./AlbumGrid"; // Adjust path as needed
 import { gsap } from "gsap";
-import { data } from "./FakeData";
+// import { data } from "./FakeData";
 // Helper function to convert Shazam track to standardized format
 const convertShazamTrack = (track) => {
   const coverArtUrl =
@@ -253,7 +253,7 @@ const EnhancedSearchBar = ({
   const [searchHistory, setSearchHistory] = useState([]);
 
   // Fetch search results only when skipSearch is false
-  const { isLoading } = useGetSongsBySearchQuery(formattedQuery, {
+  const { data, isLoading } = useGetSongsBySearchQuery(formattedQuery, {
     skip: skipSearch,
   });
 
