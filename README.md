@@ -1,5 +1,5 @@
 # Musicify - A Premium Music Discovery Platform
-
+#
 ![Musicify Navbar](https://github.com/Targter/SpotifyClone1-Celebal/blob/2a18e806aa6e161cad18dafc630afc368cd0b8c9/public/search.png)  
 *Screenshot of the responsive navbar featuring search, playlists, liked songs, and user profile options.*
 
