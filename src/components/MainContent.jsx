@@ -341,7 +341,7 @@ const MainContent = () => {
                 </div>
               </a>
 
-              <a href="https://www.linkedin.com/in/bansalabhay" target="_blank">
+              <a href="https://www.linkedin.com/in/abhaybansal001" target="_blank">
                 <button
                   className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2  bg-gradient-to-r from-zinc-800 to-gray-900 text-gray-300 hover:bg-gray-900 hover:text-white border-gray-700 rounded-md hover:from-zinc-900 hover:to-zinc-900 transition-all duration-300 text-sm sm:text-base font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-zinc-500 z-99"
                   aria-label="Visit LinkedIn profile"
@@ -688,3 +688,4 @@ const MainContent = () => {
 };
 
 export default MainContent;
+
